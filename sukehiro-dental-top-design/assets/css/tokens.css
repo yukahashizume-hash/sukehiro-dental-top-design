@@ -1,0 +1,179 @@
+/* Web制作 UI/UXガイドライン — generated from tokens.json */
+:root, [data-theme="light"] {
+  --surface: #f6f7f5; /* ページの背景。 */
+  --surface-raised: #ffffff; /* カード、ヘッダー、モーダル、入力欄の背景。 */
+  --surface-sunken: #eceeea; /* セクションの切り替え、フッター、コードやテーブルの見出し行の背景。 */
+  --line: #d9ddd6; /* 区切り線、カードの枠線（装飾的な線）。 */
+  --line-strong: #7c8580; /* 入力欄・チェックボックスなど操作できる部品の枠線。surface と surface-raised に対して3:1以上。 */
+  --ink: #1a1f1c; /* 本文・見出しの文字色。surface、surface-raised、surface-sunken、各 *-soft の上で使う。 */
+  --ink-muted: #545d58; /* 補足テキスト、日付、キャプション、プレースホルダー。surface、surface-raised、primary-soft の上で4.5:1以上。 */
+  --primary: #0e6b5c; /* 主要ボタン、リンク、選択中の状態。1画面で最も重要な行動にだけ使う。文字として使う場合は surface、surface-raised、primary-soft の上。 */
+  --primary-hover: #0a5549; /* primary のホバー・押下時。 */
+  --on-primary: #ffffff; /* primary・primary-hover の塗りの上の文字とアイコン。白を直接指定せずこのトークンを使う。 */
+  --primary-soft: #ddefe9; /* 選択中の行、タグ、情報の囲みなど、primary を薄く敷く背景。 */
+  --highlight: #b3470f; /* キャンペーン価格・新着など、マーケティング上の強調に限って使う。ボタンには使わない。文字として surface と surface-raised の上で4.5:1以上。 */
+  --success: #1b7340; /* 完了・成功のテキストとアイコン。必ず文言かアイコンを併記する。surface と success-soft の上。 */
+  --success-soft: #e3f2e8; /* 成功メッセージの背景。 */
+  --warning: #8a5300; /* 注意のテキストとアイコン。必ず文言かアイコンを併記する。surface と warning-soft の上。 */
+  --warning-soft: #fbefd9; /* 注意メッセージの背景。 */
+  --danger: #b3261e; /* エラー・削除など取り消せない操作のテキストとアイコン。必ず文言かアイコンを併記する。surface と danger-soft の上。 */
+  --danger-soft: #fbe6e4; /* エラーメッセージの背景。 */
+  --info: #1f5fae; /* お知らせ・ヘルプのテキストとアイコン。surface と info-soft の上。 */
+  --info-soft: #e3ecf8; /* お知らせの背景。 */
+  --focus-ring: #1f5fae; /* キーボードフォーカスの輪郭線。2pxの surface 色のすき間の外側に2pxの実線で描く。すべての面に対して3:1以上。 */
+  --shadow-1: 0 1px 2px rgba(26,31,28,0.08), 0 2px 8px rgba(26,31,28,0.06); /* ドロップダウン、追従ヘッダー。 */
+  --shadow-2: 0 8px 32px rgba(26,31,28,0.18); /* モーダル、トースト。 */
+}
+[data-theme="dark"] {
+  --surface: #121614;
+  --surface-raised: #1a1f1d;
+  --surface-sunken: #0c0f0e;
+  --line: #2c3330;
+  --line-strong: #76807b;
+  --ink: #edf1ee;
+  --ink-muted: #a8b1ac;
+  --primary: #5cc4ad;
+  --primary-hover: #82d6c3;
+  --on-primary: #08201b;
+  --primary-soft: #15322b;
+  --highlight: #f0955a;
+  --success: #6fcf8f;
+  --success-soft: #16301f;
+  --warning: #e9b44c;
+  --warning-soft: #33270f;
+  --danger: #f2867d;
+  --danger-soft: #3a1a17;
+  --info: #8bb6ef;
+  --info-soft: #152539;
+  --focus-ring: #8bb6ef;
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-2: 0 8px 32px rgba(0,0,0,0.6);
+}
+:root {
+  --space-1: 4px; /* アイコンと文字の間、タグの内側（上下）。 */
+  --space-2: 8px; /* 関連の強い要素の間（ラベルと入力欄、見出しと本文の最小）。 */
+  --space-3: 12px; /* ボタンの内側（上下）、リストの行間。 */
+  --space-4: 16px; /* スマホの左右余白、カードの内側（スマホ）、フォーム項目の間。 */
+  --space-5: 24px; /* カードの内側（PC）、カード同士の間、ボタンの内側（左右）。 */
+  --space-6: 32px; /* ブロック同士の間、PCの左右余白（最小）。 */
+  --space-7: 48px; /* 見出しと本文グループの間、スマホのセクション間。 */
+  --space-8: 64px; /* タブレットのセクション間。 */
+  --space-9: 96px; /* PCのセクション間（標準）。 */
+  --space-10: 128px; /* MVの下、大きな区切りのセクション間。 */
+  --radius-sm: 4px; /* 入力欄、チェックボックス、タグ。 */
+  --radius-md: 8px; /* ボタン、カード、通知。 */
+  --radius-lg: 16px; /* モーダル、MV内の画像、大きなパネル。 */
+  --radius-pill: 999px; /* バッジ、トグル、丸いボタン。 */
+  --bp-sm: 600px; /* 大きめのスマホ・小さいタブレット。2カラムを許可。 */
+  --bp-md: 960px; /* タブレット横・小さいPC。グローバルナビを横並びに。 */
+  --bp-lg: 1280px; /* PC標準。12カラムグリッドを使う。 */
+  --container-text: 720px; /* 記事・お知らせなど読み物の本文幅。 */
+  --container: 1120px; /* 通常のコンテンツ幅。 */
+  --container-wide: 1280px; /* MV、ギャラリーなど幅を使う要素。 */
+  --grid-columns: 12; /* PCのグリッド列数。タブレット8、スマホ4。 */
+  --grid-gutter: 24px; /* 列の間隔。スマホは16px。 */
+  --tap-target: 44px; /* タップできる要素の最小の高さと幅。 */
+  --z-header: 100; /* 追従ヘッダー。 */
+  --z-dropdown: 200; /* ドロップダウン、ツールチップ。 */
+  --z-modal: 1000; /* モーダルと背景の幕。 */
+  --z-toast: 1100; /* トースト通知。 */
+  --font-sans: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, system-ui, sans-serif;
+  --font-display: "Zen Kaku Gothic New", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --text-display: 700 48px/60px var(--font-display); /* MVのキャッチコピー専用。1ページに1回。スマホでは32px/44px。 */
+  --text-h1: 700 36px/50px var(--font-display); /* ページタイトル。1ページに1つ。スマホでは28px/40px。 */
+  --text-h2: 700 28px/42px var(--font-display); /* セクション見出し。スマホでは24px/36px。 */
+  --text-h3: 700 22px/34px var(--font-display); /* ブロック見出し、カードのタイトル（大）。 */
+  --text-h4: 700 18px/28px var(--font-display); /* 小見出し、カードのタイトル（小）。 */
+  --text-lead: 400 18px/32px var(--font-sans); /* セクション冒頭の導入文。2〜3行まで。 */
+  --text-body: 400 16px/28px var(--font-sans); /* 本文の標準。行の長さは最大40em。 */
+  --text-body-sm: 400 14px/24px var(--font-sans); /* 注釈、カードの説明文、フォームの補足。 */
+  --text-caption: 400 12px/20px var(--font-sans); /* 日付、画像のキャプション、コピーライト。12px未満は使わない。 */
+  --text-label: 700 14px/20px var(--font-sans); /* フォームのラベル、タブ、ナビゲーション。 */
+  --text-button: 700 16px/24px var(--font-sans); /* ボタンの文字。 */
+  --text-code: 400 14px/22px var(--font-mono); /* コード、トークン名、数値の表記。 */
+}
+.display {
+  font-family: var(--font-display);
+  font-size: 48px;
+  line-height: 60px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.h1 {
+  font-family: var(--font-display);
+  font-size: 36px;
+  line-height: 50px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.h2 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 42px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.h3 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 34px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.h4 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.lead {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 32px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+.body-sm {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+.caption {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+.label {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.button {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.code {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  letter-spacing: 0;
+}

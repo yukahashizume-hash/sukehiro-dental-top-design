@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>C案 2つの入口</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/webguide/tokens.css">
+<link rel="stylesheet" href="ds/webguide/components/bundle.css">
+<script src="ds/webguide/components/bundle.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;family=Zen+Kaku+Gothic+New:wght@500;700&amp;family=Zen+Old+Mincho:wght@500;700&amp;display=swap">
+<style>
+body{margin:0;background:#f7fafb}
+a{color:var(--primary)}a:not([class]):hover{color:var(--primary-hover)}
+.brand{--primary:#12709F;--primary-hover:#0D5A80;--primary-soft:#E3F4FC;--focus-ring:#12709F;--surface:#F7FAFB;--sky:#3BA9DD;--leaf:#6CC3A0;background:var(--surface);color:var(--ink);font-family:var(--font-sans)}
+.pal-1{--adult:#1F3A5F;--adult-soft:#E6ECF4;--kids-soft:#FFE7DC;--kids-ink:#B4471F;--kids:#F28C6B}
+.pal-2{--adult:#172B4D;--adult-soft:#E4E8EF;--kids-soft:#FFF1C9;--kids-ink:#8A5B00;--kids:#F2B53A}
+.pal-3{--adult:#2B3A8C;--adult-soft:#E7E9F5;--kids-soft:#FFE2BF;--kids-ink:#A64B00;--kids:#F59A3C}
+.wrap{max-width:1144px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.sec{padding:96px 0}
+.head{text-align:center;margin-bottom:48px}
+.head .tag{display:inline-flex;align-items:center;gap:8px;font:700 13px/20px var(--font-sans);letter-spacing:.16em;color:var(--primary)}
+.head .tag::before{content:"";width:8px;height:8px;border-radius:999px;background:var(--sky)}
+.head h2{margin:8px 0 0;font:var(--text-h2);letter-spacing:.04em}
+.head p{margin:12px auto 0;font:var(--text-body);color:var(--ink-muted);max-width:44em}
+.ph{display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;box-sizing:border-box;font:400 12px/20px var(--font-sans);color:var(--ink-muted);background:var(--primary-soft)}
+.ph.phi{color:transparent!important;font-size:0!important;background-size:var(--bs,cover)!important;background-position:var(--bp,center)!important;background-repeat:no-repeat!important}
+.card{background:var(--surface-raised);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.hours{width:100%;border-collapse:separate;border-spacing:3px;font:400 14px/20px var(--font-sans)}
+.hours th,.hours td{background:var(--surface-raised);border-radius:6px;padding:10px 6px;text-align:center}
+.hours thead th{background:var(--adult);color:var(--on-primary)}
+.hours td:first-child{white-space:nowrap}
+.hours .today{background:var(--primary);color:var(--on-primary);font-weight:700}
+.chip{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:var(--surface-raised);border:1px solid var(--line-strong);color:var(--ink);text-decoration:none;font:var(--text-label)}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.nav a{font:var(--text-label);color:var(--ink);text-decoration:none;padding:12px 0}
+.nav .em{color:var(--primary)}
+.more{font:var(--text-label);color:var(--primary);text-decoration:none}
+.ctl{width:44px;height:44px;border-radius:999px;border:0;background:var(--surface-raised);color:var(--ink);cursor:pointer;font:700 16px/1 var(--font-sans);box-shadow:var(--shadow-1)}
+.dotbtn{display:grid;place-items:center;width:36px;height:44px;border:0;background:none;padding:0;cursor:pointer}
+.dot{display:block;width:10px;height:10px;border-radius:999px;background:var(--surface-raised);border:1px solid var(--line-strong)}
+.dot--on{width:28px;background:var(--primary);border-color:var(--primary)}
+.mi{width:100%;display:flex;gap:12px;align-items:center;min-height:64px;padding:10px 14px;border-radius:14px;background:var(--surface-raised);border:1px solid var(--line);cursor:pointer;text-align:left;color:var(--ink);font-family:var(--font-sans)}
+.mi:hover{border-color:var(--primary)}
+.mi--on{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.rainbow{background:linear-gradient(150deg,var(--kids) 0 32%,var(--sky) 32% 58%,var(--leaf) 58% 74%,var(--adult) 74% 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.catch{margin:0;font:500 62px/1.4 'Zen Old Mincho',serif;letter-spacing:.1em;color:#fff;text-shadow:0 2px 18px rgba(10,20,35,.35)}
+.c-g{color:#A8E0B5}.c-b{color:#9ED7F5}.c-p{color:#F7B6C8}
+.cvic{flex:none;vertical-align:-4px;margin-right:4px}
+.bn--h{flex-direction:row;min-height:240px;align-items:stretch}
+.bn--h .bn__body{align-items:flex-start;text-align:left;padding:28px 32px 28px 8px}
+.tab{min-height:56px;padding:0 32px;border-radius:999px;font:var(--text-h4);cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+.bring{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 16px;font:var(--text-label)}
+.bring svg{width:20px;height:20px;fill:none;stroke:var(--primary);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.step2:not(:last-child)::after{content:"";position:absolute;right:-20px;top:50%;width:0;height:0;border:7px solid transparent;border-left:10px solid var(--sky);transform:translateY(-50%)}
+@media (max-width:960px){.cstep{grid-template-columns:repeat(2,minmax(0,1fr))!important}.step2::after{display:none}}
+@media (max-width:600px){.cstep{grid-template-columns:1fr!important}}
+.bn2{flex:none;display:flex;overflow:hidden;text-decoration:none;color:var(--ink);border-radius:28px;box-shadow:0 6px 0 rgba(18,112,159,.10);transition:transform .2s}
+.bn2:hover{transform:translateY(-4px)}
+.bn2--h{width:500px;height:240px;flex-direction:row}
+.bn2--h .bn2__img{width:200px;flex:none;margin:14px 0 14px 14px;border-radius:20px;background:rgba(255,255,255,.65)}
+.bn2__body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:20px 22px}
+.bn2__tag{align-self:flex-start;font:700 11px/18px var(--font-sans);letter-spacing:.12em;padding:2px 12px;border-radius:999px;background:#fff;color:var(--primary)}
+.bn2__catch{font:400 12px/20px var(--font-sans);color:#4a5450}
+.bn2__title{font:500 23px/1.45 'Zen Old Mincho',serif;letter-spacing:.06em;white-space:pre-line}
+.bn2__more{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px;padding-top:10px;border-top:1px solid rgba(255,255,255,.95);font:700 12px/18px var(--font-sans);color:var(--primary)}
+.bn2__arw{flex:none;width:32px;height:32px;border-radius:999px;background:var(--sky);color:#fff;display:grid;place-items:center;font-size:16px}
+.cvt{display:flex;align-items:center;gap:14px;min-height:84px;padding:14px 16px 14px 14px;border-radius:24px;background:var(--bg);color:var(--fg);text-decoration:none;box-shadow:0 5px 0 rgba(18,60,90,.12);transition:transform .15s,box-shadow .15s}
+.cvt:hover{transform:translateY(-2px);box-shadow:0 7px 0 rgba(18,60,90,.12)}
+.cvt__ic{flex:none;width:52px;height:52px;border-radius:999px;background:var(--ic);color:var(--icfg);display:grid;place-items:center}
+.cvt__tx{flex:1;min-width:0;display:flex;flex-direction:column}
+.cvt__s{font:700 12px/18px var(--font-sans)}
+.cvt__m{font:700 19px/26px var(--font-display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cvt--lg{min-height:96px}.cvt--lg .cvt__m{font-size:21px}
+.cvt__arw{flex:none;width:32px;height:32px;border-radius:999px;background:rgba(255,255,255,.25);display:grid;place-items:center;font:700 18px/1 var(--font-sans)}
+.lk{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:48px;padding:0 16px;border-radius:14px;background:#fff;color:var(--ink);text-decoration:none;font:var(--text-label);box-shadow:0 3px 0 rgba(0,0,0,.05)}
+.lk::after{content:"";width:16px;height:16px;flex:none;background:var(--lc);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5.5l6.5 6.5L9 18.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5.5l6.5 6.5L9 18.5'/%3E%3C/svg%3E") center/contain no-repeat}
+.lk:hover{color:var(--lc)}
+.chip{background:var(--primary-soft);border:0;color:var(--primary);font-weight:700}
+.chip::after{content:"";width:14px;height:14px;margin-left:6px;flex:none;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5.5l6.5 6.5L9 18.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5.5l6.5 6.5L9 18.5'/%3E%3C/svg%3E") center/contain no-repeat}
+.chip:hover{background:var(--sky);color:#fff}
+.chipsP .chip{background:#fff;color:var(--lc);min-height:40px;padding:0 14px}
+.ctl{background:var(--sky);color:#fff;box-shadow:0 4px 0 rgba(18,112,159,.18)}
+.brand .wg-btn--secondary{background:var(--primary-soft);border-color:var(--primary-soft);color:var(--primary)}
+.brand .wg-btn--secondary:hover{background:var(--sky);border-color:var(--sky);color:#fff}
+
+.mi{border:2px solid transparent;box-shadow:0 3px 0 rgba(18,112,159,.12)}
+.mi:hover{border-color:var(--sky)}
+.more{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;background:var(--primary-soft)}
+@media (max-width:960px){.cvt3{grid-template-columns:1fr!important}.bn2--h{width:420px}}
+.rec{display:grid;grid-template-columns:180px minmax(0,1fr);gap:32px;align-items:center;background:var(--kids-soft);border-radius:40px;padding:48px}
+.rec__copy{margin:0;writing-mode:vertical-rl;font:500 21px/40px 'Zen Old Mincho',serif;letter-spacing:.18em;color:var(--ink);height:360px;justify-self:center}
+.rec__copy span{display:block}
+.rec__photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;align-items:start}
+.rec__ph{aspect-ratio:1/1.1;overflow:hidden}
+.rec__foot{margin-top:24px;padding:0 8px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.rec__en{margin:0;font:700 26px/1 var(--font-display);letter-spacing:.12em;color:#9ACB7E}
+.shp1{clip-path:polygon(0.0% 7.8%,57.1% 0.0%,59.5% 0.0%,63.5% 0.2%,67.4% 0.7%,71.2% 1.5%,74.9% 2.6%,78.4% 4.0%,81.6% 5.7%,84.6% 7.6%,87.3% 9.8%,89.6% 12.2%,91.6% 14.8%,93.1% 17.5%,94.3% 20.3%,95.0% 23.2%,95.2% 26.1%,95.1% 29.1%,94.5% 32.0%,93.4% 34.8%,92.0% 37.6%,90.1% 40.2%,87.9% 42.6%,85.3% 44.8%,82.4% 46.8%,79.2% 48.6%,75.7% 50.1%,73.8% 51.0%,79.2% 51.8%,82.9% 53.2%,86.3% 54.9%,89.4% 56.8%,92.1% 59.0%,94.5% 61.3%,96.5% 63.8%,98.1% 66.5%,99.2% 69.2%,99.8% 72.0%,100.0% 74.8%,99.7% 77.7%,99.0% 80.5%,97.7% 83.2%,96.1% 85.8%,94.0% 88.3%,91.5% 90.6%,88.7% 92.7%,85.5% 94.5%,82.0% 96.2%,78.3% 97.5%,74.4% 98.6%,70.3% 99.4%,66.1% 99.8%,61.9% 100.0%,0.0% 94.1%)}
+.shp2{clip-path:polygon(23.7% 78.5%,17.0% 75.1%,11.4% 71.5%,6.9% 67.7%,3.6% 63.9%,1.3% 59.8%,0.1% 55.7%,0.0% 51.3%,1.0% 46.9%,3.1% 42.3%,6.3% 37.6%,10.6% 32.7%,16.0% 27.6%,32.1% 13.9%,38.5% 8.9%,44.5% 5.0%,50.2% 2.2%,55.6% 0.5%,60.6% 0.0%,65.3% 0.6%,69.7% 2.3%,73.7% 5.2%,77.4% 9.2%,80.8% 14.3%,83.9% 20.5%,86.6% 27.9%,94.6% 52.9%,97.7% 63.7%,99.5% 73.1%,100.0% 81.1%,99.3% 87.7%,97.3% 92.9%,94.0% 96.7%,89.4% 99.0%,83.6% 100.0%,76.6% 99.6%,68.2% 97.7%,58.6% 94.4%,47.7% 89.8%)}
+.shp3{clip-path:polygon(100.0% 50.0%,99.0% 53.2%,96.3% 56.1%,92.6% 58.5%,88.8% 60.4%,85.8% 62.2%,84.1% 64.1%,83.9% 66.7%,84.8% 70.1%,86.2% 74.2%,87.1% 78.5%,86.9% 82.4%,85.4% 85.4%,82.4% 86.9%,78.5% 87.1%,74.2% 86.2%,70.1% 84.8%,66.7% 83.9%,64.1% 84.1%,62.2% 85.8%,60.4% 88.8%,58.5% 92.6%,56.1% 96.3%,53.2% 99.0%,50.0% 100.0%,46.8% 99.0%,43.9% 96.3%,41.5% 92.6%,39.6% 88.8%,37.8% 85.8%,35.9% 84.1%,33.3% 83.9%,29.9% 84.8%,25.8% 86.2%,21.5% 87.1%,17.6% 86.9%,14.6% 85.4%,13.1% 82.4%,12.9% 78.5%,13.8% 74.2%,15.2% 70.1%,16.1% 66.7%,15.9% 64.1%,14.2% 62.2%,11.2% 60.4%,7.4% 58.5%,3.7% 56.1%,1.0% 53.2%,0.0% 50.0%,1.0% 46.8%,3.7% 43.9%,7.4% 41.5%,11.2% 39.6%,14.2% 37.8%,15.9% 35.9%,16.1% 33.3%,15.2% 29.9%,13.8% 25.8%,12.9% 21.5%,13.1% 17.6%,14.6% 14.6%,17.6% 13.1%,21.5% 12.9%,25.8% 13.8%,29.9% 15.2%,33.3% 16.1%,35.9% 15.9%,37.8% 14.2%,39.6% 11.2%,41.5% 7.4%,43.9% 3.7%,46.8% 1.0%,50.0% 0.0%,53.2% 1.0%,56.1% 3.7%,58.5% 7.4%,60.4% 11.2%,62.2% 14.2%,64.1% 15.9%,66.7% 16.1%,70.1% 15.2%,74.2% 13.8%,78.5% 12.9%,82.4% 13.1%,85.4% 14.6%,86.9% 17.6%,87.1% 21.5%,86.2% 25.8%,84.8% 29.9%,83.9% 33.3%,84.1% 35.9%,85.8% 37.8%,88.8% 39.6%,92.6% 41.5%,96.3% 43.9%,99.0% 46.8%)}
+.shp4{clip-path:polygon(0.1% 30.2%,0.0% 26.6%,0.2% 23.4%,0.8% 20.4%,1.7% 17.7%,3.0% 15.2%,4.6% 13.0%,6.5% 11.1%,8.7% 9.5%,11.3% 8.1%,14.2% 7.0%,17.5% 6.2%,21.0% 5.6%,69.2% 0.3%,73.1% 0.0%,76.6% 0.1%,79.9% 0.6%,82.8% 1.4%,85.5% 2.6%,87.8% 4.2%,89.8% 6.1%,91.6% 8.4%,93.0% 11.0%,94.1% 14.1%,94.9% 17.4%,95.5% 21.2%,99.8% 68.1%,100.0% 71.7%,99.8% 75.0%,99.3% 78.0%,98.5% 80.8%,97.3% 83.3%,95.7% 85.5%,93.9% 87.4%,91.7% 89.1%,89.1% 90.5%,86.2% 91.7%,83.0% 92.6%,79.4% 93.2%,30.1% 99.6%,26.1% 100.0%,22.4% 100.0%,19.0% 99.5%,16.0% 98.7%,13.3% 97.5%,10.9% 95.9%,8.8% 93.9%,7.1% 91.6%,5.7% 88.8%,4.6% 85.7%,3.8% 82.1%,3.4% 78.2%)}
+@media (max-width:960px){.rec{grid-template-columns:1fr;padding:32px}.rec__copy{writing-mode:horizontal-tb;height:auto;justify-self:start;font-size:18px;line-height:32px}.rec__photos{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cvb{display:flex;align-items:center;gap:14px;text-decoration:none;border-radius:24px;padding:18px 22px;min-height:72px;box-sizing:border-box}
+@media (max-width:960px){.forpanel{grid-template-columns:1fr!important}.forpanel>a{grid-row:auto!important}}
+@media (max-width:600px){.bn--h{flex-direction:column}.bn--h .ph{width:auto!important}}
+.tagline{display:flex;align-items:center;gap:16px;margin:0;color:#fff;font:500 13px/20px var(--font-sans);letter-spacing:.24em}
+.tagline svg{width:24px;height:24px;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.pts{list-style:none;margin:0;padding:0;display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.pt{width:152px;height:152px;border-radius:999px;background:#fff;box-shadow:0 8px 24px rgba(26,31,28,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;font:700 14px/20px var(--font-sans);color:var(--ink)}
+.pt svg{width:34px;height:34px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pt b{font:700 21px/26px var(--font-display);letter-spacing:.04em}
+.bn{position:relative;display:flex;flex-direction:column;text-decoration:none;color:var(--ink);overflow:hidden;box-shadow:0 8px 28px rgba(26,31,28,.08);min-height:460px;transition:transform .2s}
+.bn:hover{transform:translateY(-4px)}
+.bn::after{content:"";position:absolute;inset:12px;border:1px solid rgba(255,255,255,.9);pointer-events:none;border-radius:18px}
+.bn__img{aspect-ratio:4/3.3;background:rgba(255,255,255,.45)!important}
+.bn__body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:22px 22px 14px}
+.bn__tag{font:500 11px/18px var(--font-sans);letter-spacing:.12em;padding:2px 12px;border-radius:999px;background:rgba(255,255,255,.85);color:var(--ink)}
+.bn__catch{font:400 13px/22px var(--font-sans);letter-spacing:.06em;color:#4a5450}
+.bn__title{font:500 25px/1.45 'Zen Old Mincho',serif;letter-spacing:.08em;white-space:pre-line}
+.bn__foot{position:relative;z-index:1;display:block;background:rgba(255,255,255,.8);text-align:center;padding:12px 16px 18px;font:500 13px/20px 'Zen Old Mincho',serif;letter-spacing:.12em}
+@media (max-width:600px){.catch{font-size:32px!important}.pt{width:120px;height:120px}.pt b{font-size:17px}}
+@media (max-width:960px){.g3{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{display:none!important}.msplit{grid-template-columns:1fr!important}.mvcopy{position:static!important;transform:none!important;margin:16px 0 0!important;width:auto!important}}
+@media (max-width:600px){.wrap{padding:0 16px}.sec{padding:48px 0}.g2,.g3{grid-template-columns:1fr}.head h2{font-size:24px;line-height:36px}.mlist{grid-template-columns:1fr!important}}
+
+/* ===== 共通：ホバー／押下（反応は押した瞬間に・控えめに） ===== */
+.brand a,.brand button{transition:color .2s ease,background-color .2s ease,border-color .2s ease,box-shadow .3s ease,transform .3s cubic-bezier(.22,1,.36,1),opacity .2s ease}
+.brand .wg-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(18,112,159,.22)}
+.brand .wg-btn:active,.brand button:active,.brand .chip:active{transform:scale(.97);transition-duration:.1s}
+.nav a{position:relative}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:6px;height:2px;border-radius:2px;background:var(--primary);transform:scaleX(0);transform-origin:left center;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.nav a:hover::after,.nav a:focus-visible::after{transform:scaleX(1)}
+.brand .wg-card,.brand a.card{transition:transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease}
+.brand .wg-card:hover,.brand a.card:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(16,32,48,.12)}
+.brand .phi{transition:filter .35s ease}
+.brand a:hover .phi,.brand .wg-card:hover .phi{filter:brightness(1.06) saturate(1.08)}
+.brand .more{transition:color .2s ease,letter-spacing .3s ease}
+.brand a:hover .more,.brand .more:hover{letter-spacing:.06em}
+.brand .mi:not(.mi--on):hover{background:rgba(255,255,255,.7)}
+@media (hover:none){.brand .wg-btn:hover,.brand .wg-card:hover,.brand a.card:hover{transform:none}}
+@media (prefers-reduced-motion:reduce){.brand a,.brand button,.brand .wg-card{transition:color .2s,background-color .2s!important;transform:none!important}}
+/* ===== 背景にうっすら写真 ===== */
+.bgph{position:relative;isolation:isolate}
+.bgph::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--bgimg) var(--bgpos,center)/cover no-repeat;opacity:var(--bgop,.09);-webkit-mask-image:var(--bgmask,linear-gradient(180deg,transparent 0,#000 18%,#000 82%,transparent 100%));mask-image:var(--bgmask,linear-gradient(180deg,transparent 0,#000 18%,#000 82%,transparent 100%))}
+/* ===== ハンバーガー／ドロワー（スマホ） ===== */
+.hbg{display:none;flex:none;width:52px;height:52px;border:0;border-radius:16px;background:var(--primary);color:var(--on-primary);flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;padding:0}
+.hbg i{display:block;width:20px;height:2px;border-radius:2px;background:currentColor}
+.hbg b{font:700 9px/1 var(--font-sans);letter-spacing:.1em;margin-top:3px}
+.hbg:hover{background:var(--primary-hover)}
+.drw{position:fixed;inset:0;z-index:1000}
+.drw__scrim{position:absolute;inset:0;border:0;padding:0;margin:0;width:100%;background:rgba(16,32,48,.38);cursor:pointer;animation:drwFade .3s ease-out both}
+.drw__panel{position:absolute;top:0;right:0;bottom:0;width:min(86vw,380px);box-sizing:border-box;overflow-y:auto;display:flex;flex-direction:column;gap:20px;padding:16px 20px 32px;background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);border-left:1px solid rgba(255,255,255,.6);box-shadow:-16px 0 48px rgba(16,32,48,.2);animation:drwIn .45s cubic-bezier(.22,1,.36,1) both}
+.drw__head{display:flex;align-items:center;justify-content:space-between;min-height:52px}
+.drw__ttl{font:700 13px/1 var(--font-sans);letter-spacing:.24em;color:var(--primary)}
+.drw__close{width:48px;height:48px;border-radius:999px;border:1px solid var(--line);background:#fff;position:relative;cursor:pointer}
+.drw__close i{position:absolute;left:14px;right:14px;top:50%;height:2px;border-radius:2px;background:var(--ink)}
+.drw__close i:first-child{transform:rotate(45deg)}.drw__close i:last-child{transform:rotate(-45deg)}
+.drw__nav{display:flex;flex-direction:column}
+.drw__nav a{display:flex;justify-content:space-between;align-items:center;min-height:54px;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font:700 15px/1.4 var(--font-sans);transition:color .2s ease,padding .3s cubic-bezier(.22,1,.36,1)}
+.drw__nav a:hover{color:var(--primary);padding-left:6px}
+.drw__nav a span{color:var(--primary);font-weight:400}
+.drw__cv{display:grid;gap:10px}
+.drw__btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:54px;border-radius:999px;text-decoration:none;font:700 15px/1 var(--font-sans)}
+.drw__btn--web{background:var(--primary);color:var(--on-primary)}
+.drw__btn--web:hover{background:var(--primary-hover);color:var(--on-primary)}
+.drw__btn--tel{background:#fff;color:var(--primary);border:2px solid var(--primary)}
+.drw__note{margin:0;text-align:center;font:var(--text-caption);color:var(--ink-muted)}
+@keyframes drwIn{from{transform:translateX(100%)}to{transform:none}}
+@keyframes drwFade{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.drw__panel{animation:drwFade .2s ease both}}
+@media (prefers-reduced-transparency:reduce){.drw__panel{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}}
+/* ===== レスポンシブ共通 ===== */
+.brand{overflow-x:clip}
+@media (max-width:960px){.hbg{display:inline-flex}.nav{display:none!important}}
+@media (max-width:600px){
+.hcv{display:none!important}
+.wg-footer .wrap{grid-template-columns:1fr!important;gap:28px!important}
+.wg-footer ul{grid-template-columns:1fr 1fr!important}
+.wg-footer *{min-width:0}
+}
+.card--flat{border:0;background:transparent;border-radius:0;overflow:visible}.card--flat>div:last-child{padding:16px 4px 0!important}@media (max-width:600px){.pricebar{grid-template-columns:1fr!important;gap:12px!important}}
+.rcC{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:56px;align-items:center}.rcC__en{margin:0;font:700 60px/1 var(--font-display);letter-spacing:.03em;color:#9ACB7E}.rcC__ttl{margin:14px 0 0;font:var(--text-h2)}.rcC__lead{margin:20px 0 0;font:500 18px/2.1 'Zen Old Mincho',serif;letter-spacing:.06em;color:var(--ink)}.rcC__tags{list-style:none;margin:20px 0 0;padding:0;display:flex;gap:8px;flex-wrap:wrap}.rcC__tags li{padding:4px 16px;border-radius:999px;background:var(--kids-soft);color:var(--kids-ink);font:700 13px/22px var(--font-sans)}.rcC__cta{margin-top:32px;display:flex;flex-direction:column;align-items:flex-start;gap:8px}.rcC__vis{position:relative;aspect-ratio:1.1/1}.rcC__blob{position:absolute;inset:12% 6% 4% 12%;border-radius:58% 42% 52% 48%/46% 58% 42% 54%;background:var(--kids-soft)}.rcC__p{position:absolute;aspect-ratio:1/1.08;transition:transform .5s cubic-bezier(.22,1,.36,1)}.rcC__p .ph{height:100%}.rcC__vis:hover .rcC__p{transform:translateY(-4px)}.rcC__dot{position:absolute;border-radius:999px}@media (max-width:960px){.rcC{grid-template-columns:1fr;gap:32px}.rcC__en{font-size:44px}.rcC__vis{max-width:520px;width:100%;justify-self:center}}
+@media (max-width:600px){
+.brand a[href^="tel:"][style*="var(--font-display)"]{font-size:22px!important;line-height:30px!important;white-space:nowrap}
+.mvG,.mvO{position:relative!important;inset:auto!important;flex:none}
+.mvG{height:300px}.mvO{height:300px;display:block}
+.mvGr{display:none!important}
+}
+@media (max-width:960px){.mvcopy{border-radius:24px!important;padding:28px 24px!important}}
+@media (max-width:600px){
+.mvcopy+div{margin-top:-28px!important}
+.mvcopy{padding:24px 20px 56px!important}
+.cvt--lg b,.cvt--lg strong{font-size:22px!important}
+}
+@media (max-width:600px){.fyword{font-size:40px!important}}
+.ft .more{margin-top:4px;background:transparent!important;padding:0!important;border-bottom:2px solid currentColor;border-radius:0!important;padding-bottom:2px!important}@media (max-width:600px){.ft{grid-template-columns:120px minmax(0,1fr)!important;gap:16px!important}.ft .phi{width:112px!important;height:112px!important}}
+.brand a.card--flat:hover{transform:none!important;box-shadow:none!important}.brand a.card--flat:hover .phi{filter:none!important}.card--flat .more{transition:background-color .2s ease,color .2s ease}.brand a.card--flat:hover .more{background:var(--primary);color:var(--on-primary)}
+@media (max-width:600px){.mvF{height:360px!important;border-radius:24px!important}.mvF .mvG{position:absolute!important;inset:0!important;height:auto!important}}
+/* ===== ホバー視認性・矢印 ===== */
+.chv{display:block;flex:none}
+.ctl{display:inline-grid!important;place-items:center;line-height:1!important;padding:0!important}
+.ctl .chv{width:20px;height:20px}
+.brand .more{display:inline-flex;align-items:center;gap:4px;align-self:flex-start}
+.brand .more .chv{width:14px;height:14px;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.brand a:hover .more .chv,.brand .more:hover .chv{transform:translateX(3px)}
+.btn-arw{display:inline-grid;place-items:center;width:22px;height:22px;margin-left:4px;margin-right:-6px;border-radius:999px;background:color-mix(in srgb,currentColor 14%,transparent);flex:none}
+.btn-arw .chv{width:14px;height:14px;transition:transform .3s cubic-bezier(.22,1,.36,1)}
+.wg-btn:hover .btn-arw .chv{transform:translateX(2px)}
+.brand .wg-btn--primary,.brand .wg-btn--primary:hover,.brand .wg-btn--primary:focus-visible{color:var(--on-primary)}
+.brand .wg-btn--primary:hover{background:var(--primary-hover)}
+.brand .wg-btn--secondary:hover{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.brand a[class]:hover{text-decoration-color:currentColor}
+
+@media (max-width:600px){
+.mvG{grid-template-columns:1.35fr 1fr!important;grid-template-rows:1fr 1fr!important;gap:6px!important}
+.mvG>*{grid-column:auto!important;grid-row:auto!important;grid-row-start:auto!important;border-radius:0!important}
+.mvG>*:first-child{grid-row:span 2!important}
+.mvG>*:nth-child(n+4){display:none!important}
+.mvF .mvG,.mvF .mvO{height:340px}
+}
+.brand .ctl{background:#1C86BC}.brand .ctl:hover{background:var(--primary)}
+.brand .chip:hover{background:var(--primary);color:var(--on-primary)}
+@media (max-width:600px){
+.pkw{overflow-x:auto!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 16px 20px!important;scrollbar-width:none}
+.pkw::-webkit-scrollbar{display:none}
+.pkt{transform:none!important;gap:14px!important}
+.pkt .bn2{scroll-snap-align:start;width:76vw!important}
+}
+@media (max-width:600px){
+.pkt .bn2--h{flex-direction:column!important}.pkt .bn2--h .ph{width:auto!important;height:180px!important}
+.brand a[style*="border-radius: 28px; padding: 20px 28px"]{padding:16px 18px!important;gap:14px!important}
+.brand a[style*="border-radius: 28px; padding: 20px 28px"] .phi{width:64px!important;height:64px!important}
+.rainbow{font-size:112px!important}
+.brand span[style*="font: 700 28px/42px var(--font-display)"]{font-size:20px!important;line-height:30px!important}
+}
+@media (max-width:600px){.pkt .bn2--h{height:auto!important;min-height:0!important}}
+@media (max-width:600px){.brand button[aria-label="前のバナー"],.brand button[aria-label="次のバナー"]{display:none!important}}
+/* ===== MV：丸い写真（C案） ===== */
+.mvC2{background:#F7F1E6;padding-bottom:8px}
+.cirC{position:relative}.cirC__vis{position:relative;aspect-ratio:1440/720;overflow:hidden}
+.cc{position:absolute;aspect-ratio:1;border-radius:999px;overflow:hidden}
+.cc .ph{min-height:0;border-radius:999px}
+.cc__fill{display:block;width:100%;height:100%;border-radius:999px}
+.ccwave{position:absolute;z-index:3}.ccw{display:block;width:100%;height:auto}
+.cirC__copy{position:absolute;left:5.5%;bottom:5%;z-index:4;display:flex;flex-direction:column;gap:10px;max-width:42%}
+.cirC__copy .catch{font-size:clamp(28px,3.2vw,48px)!important;line-height:1.45;color:var(--adult);text-shadow:none}
+.cirC__copy .c-g{color:#3F9068}.cirC__copy .c-b{color:#1683BD}.cirC__copy .c-p{color:#D0587E}
+.cirC__copy .tagline{color:var(--adult)}.cirC__copy .tagline svg{stroke:var(--adult)}
+.cirC__copy .mvdesc{margin:0;font:var(--text-body-sm);color:var(--ink-muted)}
+.cpts{list-style:none;margin:10px 0 0;padding:0;display:flex;gap:10px}
+.cpts li{width:108px;height:108px;border-radius:999px;background:#fff;box-shadow:0 6px 18px rgba(26,31,28,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;font:700 11px/15px var(--font-sans);color:var(--ink)}
+.cpts svg{width:24px;height:24px;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.cpts b{font-size:14px;line-height:18px}
+.cirC__ctl{position:absolute;right:2%;bottom:3.5%;z-index:5}
+.mvctl{display:flex;align-items:center;gap:8px}.mvdots{display:flex;align-items:center;background:rgba(255,255,255,.85);border-radius:999px;padding:0 8px}
+.mvno{display:none}
+.mvai{position:absolute;right:2%;top:4%;z-index:5;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--surface-raised);box-shadow:var(--shadow-1);font:var(--text-label);color:var(--ink);cursor:pointer}
+@media (max-width:1200px){.cpts li{width:92px;height:92px;font-size:10px;line-height:13px}.cpts b{font-size:12px}}
+@media (max-width:600px){
+.cirC__vis{aspect-ratio:390/300}
+.cirC__copy{position:static;max-width:none;padding:20px 16px 12px}
+.cpts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.cpts li{width:auto;height:auto;aspect-ratio:1}
+.mvctl .ctl{display:none!important}
+}
+/* ===== C案ヘッダー（枠なし） ===== */
+.hdC{position:sticky;top:0;z-index:100;background:rgba(247,241,230,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid rgba(31,58,95,.08)}
+.hdC__in{max-width:1376px;margin:0 auto;padding:6px 32px 10px;box-sizing:border-box}
+.hdC__h1{margin:0 0 4px;font:400 11px/18px var(--font-sans);color:var(--ink-muted)}
+.hdC__row{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.hdC__nav{display:flex;gap:26px;white-space:nowrap}
+.hdC__nav a{padding:12px 0}
+.hdC__cv{display:flex;align-items:center;gap:10px}
+@media (max-width:1200px){.hdC__nav{display:none!important}.hdC .hbg{display:inline-flex}}
+@media (max-width:600px){.hdC__in{padding:6px 16px 8px}}
+/* ===== 装飾をページ全体に ===== */
+.dcs{position:relative;overflow-x:clip}
+.dcs>*:not(.dc){position:relative;z-index:1}
+.dc{position:absolute;z-index:0;aspect-ratio:1;border-radius:999px;pointer-events:none}
+.dc--w{width:96px;aspect-ratio:auto;border-radius:0}.dc--w svg{display:block;width:100%;height:auto}
+@media (max-width:1200px){.dc{opacity:.55}}
+@media (max-width:600px){.dc{transform:scale(.55);opacity:.5}.dc--w{display:none}}
+.hdC__row,.hdC__row a,.hdC__row span{white-space:nowrap}.hdC__nav{gap:20px}.hdC__nav a{font-size:13px}.hdC__row .wg-btn{padding-left:18px;padding-right:18px}.hdC__cv a[href^="tel:"]{padding:0 4px!important;font-size:16px!important}
+.cirC .mvai{top:auto;bottom:12%}
+@media (max-width:600px){.cirC .mvai{top:3%;bottom:auto;right:3%;min-height:36px;padding:0 12px;font-size:12px}}
+</style>
+</helmet>
+<div class="brand {{pal}}">
+
+<!-- 0 ヘッダー -->
+<header class="hdC">
+<div class="hdC__in">
+<h1 class="hdC__h1">熊本市東区長嶺南の歯医者・小児歯科｜歯周病治療・矯正・審美・小児歯科</h1>
+<div class="hdC__row">
+<a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink);"><img src="../assets/img/396729c000a254cdd40a6c4b5a5b48ff.png" alt="すけひろ歯科・kidsデンタルクリニック" style="height: 48px; width: auto;"><span style="font: 700 16px/22px var(--font-display);">すけひろ歯科<br><span style="font-size: 13px;">kidsデンタルクリニック</span></span></a>
+<nav class="nav hdC__nav" aria-label="グローバルナビゲーション"><a href="#">医院紹介 ▾</a><a href="#">診療案内 ▾</a><a class="em" href="#">料金表</a><a href="#">よくあるご質問</a><a href="#">お知らせ</a><a class="em" href="#">診療時間・アクセス</a><a href="#">求人案内</a></nav>
+<div class="hdC__cv"><div class="hcv" style="display: flex; gap: 8px; align-items: center;"><a href="tel:0962376479" style="font: 700 18px/24px var(--font-display); color: var(--ink); text-decoration: none; padding: 0 12px;"><svg class="cvic" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>TEL 096-237-6479</a><a class="wg-btn wg-btn--primary" href="#" style="border-radius: 999px;"><svg class="cvic" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>初診WEB予約<span class="btn-arw" aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a></div>
+<button type="button" class="hbg" aria-label="メニューを開く" aria-expanded="{{navExp}}" onClick="{{toggleNav}}"><i></i><i></i><i></i><b>MENU</b></button></div>
+</div>
+</div>
+</header>
+<!-- スマホ用ドロワーメニュー -->
+<sc-if value="{{navOpen}}" hint-placeholder-val="{{false}}">
+<div class="drw" role="dialog" aria-modal="true" aria-label="メニュー">
+<button type="button" class="drw__scrim" aria-label="メニューを閉じる" onClick="{{closeNav}}"></button>
+<div class="drw__panel">
+<div class="drw__head"><span class="drw__ttl">MENU</span><button type="button" class="drw__close" aria-label="メニューを閉じる" onClick="{{closeNav}}"><i></i><i></i></button></div>
+<nav class="drw__nav" aria-label="スマホ用メニュー"><a href="#">ホーム<span aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a><a href="#">医院紹介<span aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a><a href="#">診療案内<span aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a><a href="#">料金表<span aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a><a href="#">よくあるご質問<span aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a><a href="#">お知らせ<span aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a><a href="#">診療時間・アクセス<span aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a><a href="#">求人案内<span aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a></nav>
+<div class="drw__cv"><a class="drw__btn drw__btn--web" href="#"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>初診WEB予約（24時間受付）</a><a class="drw__btn drw__btn--tel" href="tel:0962376479"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>096-237-6479</a></div>
+<p class="drw__note">再診の方は当院に直接お電話ください</p>
+</div>
+</div>
+</sc-if>
+
+
+<!-- 1 MV（スライダー：4枚コラージュ → 1枚 → 3枚コラージュ）＋ 2つの入口 -->
+<section>
+<div class="mvC2" aria-roledescription="カルーセル" aria-label="メインビジュアル">
+<div class="cirC">
+<div class="cirC__vis">
+<div class="cc" style="left: 18.750%; top: 3.056%; width: 9.722%; z-index: 0;"><span class="cc__fill" aria-hidden="true" style="background: var(--sky);"></span></div>
+<div class="cc" style="left: 42.639%; top: 5.556%; width: 6.389%; z-index: 0;"><span class="cc__fill" aria-hidden="true" style="background: #FFD66B;"></span></div>
+<div class="cc" style="left: 78.333%; top: 66.944%; width: 15.000%; z-index: 0;"><span class="cc__fill" aria-hidden="true" style="background: var(--kids);"></span></div>
+<div class="cc" style="left: 94.028%; top: 50.556%; width: 5.000%; z-index: 3;"><span class="cc__fill" aria-hidden="true" style="background: var(--adult);"></span></div>
+<div class="cc" style="left: 41.528%; top: 54.167%; width: 1.944%; z-index: 3;"><span class="cc__fill" aria-hidden="true" style="background: #EE8FB0;"></span></div>
+<div class="cc" style="left: 80.417%; top: 5.278%; width: 3.056%; z-index: 3;"><span class="cc__fill" aria-hidden="true" style="background: var(--leaf);"></span></div>
+<div class="ccwave" style="left: 36%; top: 47%; width: 7.5%;"><svg class="ccw" aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="var(--adult)" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></div>
+<div class="ccwave" style="left: 79%; top: 84%; width: 7.5%;"><svg class="ccw" aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="var(--adult)" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></div>
+<sc-if value="{{s1}}" hint-placeholder-val="{{true}}">
+<div class="cc" style="left: 42.639%; top: 11.944%; width: 39.722%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/2770851ba28956755b96133911760b0e.jpg); --bp: 68% 35%;">①フリー素材：笑顔の子ども</div></div>
+<div class="cc" style="left: 23.194%; top: 6.944%; width: 18.889%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/3a4525be4c26d4953a8d522b7f514847.jpg); --bp: 50% 15%; --bs: 160%;">③歯みがき指導</div></div>
+<div class="cc" style="left: 3.472%; top: 13.333%; width: 16.389%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/9ff57a317748474b0201d343746d8733.jpg); --bp: 62% 20%; --bs: 160%;">②院長の診療風景</div></div>
+<div class="cc" style="left: 82.778%; top: 8.889%; width: 15.556%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/43629cbfbd938a4e9b879ff88dd3454b.jpg); --bp: 45% 40%;">④親子・歯みがき</div></div>
+</sc-if>
+<sc-if value="{{s2}}" hint-placeholder-val="{{false}}">
+<div class="cc" style="left: 41.667%; top: 9.444%; width: 41.667%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/71cca148ac14981f2ac4c2717000a3ab.jpg); --bp: 72% 30%;">1枚目：スタッフと患者さま</div></div>
+<div class="cc" style="left: 23.194%; top: 6.944%; width: 18.889%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/71f6d914aeb141ee6fcfe3182d38e28c.jpg); --bp: 58% 50%;">診療説明の風景</div></div>
+<div class="cc" style="left: 3.472%; top: 13.333%; width: 16.389%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/81597c591e4e043abb8173dbd73204ba.jpg); --bp: 55% 18%; --bs: 200%;">笑顔の子ども</div></div>
+<div class="cc" style="left: 82.778%; top: 8.889%; width: 15.556%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/c5e7bda2e84b21d78e3412048e86642f.jpg); --bp: 50% 35%;">親子の歯みがき</div></div>
+</sc-if>
+<sc-if value="{{s3}}" hint-placeholder-val="{{false}}">
+<div class="cc" style="left: 42.639%; top: 11.944%; width: 39.722%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/cd8cad21e9ef5bacad69dc6f94f62981.jpg); --bp: 45% 30%;">③女性のイメージ（笑顔の大人の女性）</div></div>
+<div class="cc" style="left: 23.194%; top: 6.944%; width: 18.889%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/e9c1bfe64b31bcc72905f8d84b8decf7.jpg); --bp: center;">審美治療のイメージ</div></div>
+<div class="cc" style="left: 3.472%; top: 13.333%; width: 16.389%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/93b0d11e1ee59b02343695cb5c2a069b.jpg); --bp: 40% 50%;">院内の様子</div></div>
+<div class="cc" style="left: 82.778%; top: 8.889%; width: 15.556%; z-index: 2;"><div class="ph phi" style="height: 100%; background-image: url(../assets/img/71cca148ac14981f2ac4c2717000a3ab.jpg); --bp: 70% 30%; --bs: 170%;">カウンセリング</div></div>
+</sc-if>
+<div class="cirC__ctl"><div class="mvctl"><div class="mvdots"><sc-for list="{{dots}}" as="d" hint-placeholder-count="3"><button type="button" class="dotbtn" aria-label="{{d.label}}" aria-current="{{d.cur}}" onClick="{{d.go}}"><sc-if value="{{d.on}}" hint-placeholder-val="{{false}}"><span class="dot dot--on"></span></sc-if><sc-if value="{{d.off}}" hint-placeholder-val="{{true}}"><span class="dot"></span></sc-if></button></sc-for></div><button type="button" class="ctl" aria-label="前のスライド" onClick="{{prev}}"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5L8.5 12l6.5 6.5"></path></svg></button><button type="button" class="ctl" aria-label="{{pauseLabel}}" onClick="{{togglePause}}">{{pauseIcon}}</button><button type="button" class="ctl" aria-label="次のスライド" onClick="{{next}}"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></button><span class="mvno">{{slideNo}} / 3　{{slideName}}</span></div></div>
+<button type="button" class="mvai"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"></path></svg>AIに質問</button>
+</div>
+<div class="cirC__copy">
+<p class="catch"><span class="c-g">家</span>族みんなの<br><span class="c-b">笑顔</span>を<span class="c-p">守</span>りたい</p>
+<p class="tagline"><svg viewBox="0 0 24 24" stroke="#A8E0B5" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg><svg viewBox="0 0 24 24" stroke="#9ED7F5" aria-hidden="true"><path d="M7 3c-2.5 0-4 2-4 4.5 0 2 .8 3.5 1.5 5 .7 1.6.8 3.2 1.2 5.2.3 1.6.8 3.3 2 3.3 1.4 0 1.4-2.4 2-4.3.4-1.2.8-1.7 2.3-1.7s1.9.5 2.3 1.7c.6 1.9.6 4.3 2 4.3 1.2 0 1.7-1.7 2-3.3.4-2 .5-3.6 1.2-5.2.7-1.5 1.5-3 1.5-5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3z"></path></svg><svg viewBox="0 0 24 24" stroke="#F7B6C8" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M12 8l1.2 2.8L16 12l-2.8 1.2L12 16l-1.2-2.8L8 12l2.8-1.2z"></path></svg><span>A SMILE FOR EVERY FAMILY</span></p>
+<p class="mvdesc">歯周病治療・小児矯正／成人矯正・審美治療から、お子さまの歯科まで。</p>
+<ul class="cpts" aria-label="当院のポイント"><li><svg viewBox="0 0 24 24" stroke="#F0A060" aria-hidden="true"><path d="M3 13l2-5h14l2 5v5h-3v-2H6v2H3z"></path><circle cx="7.5" cy="13.5" r="1.2"></circle><circle cx="16.5" cy="13.5" r="1.2"></circle></svg><span>共有駐車場<br><b style="color: #C8661F;">50</b>台</span></li><li><svg viewBox="0 0 24 24" stroke="#3BA9DD" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><span><b style="color: #1683BD;">土曜</b>も<br>診療しています</span></li><li><svg viewBox="0 0 24 24" stroke="#EE8FB0" aria-hidden="true"><path d="M3 11l9-7 9 7v9H3z"></path><path d="M10 20v-5h4v5"></path></svg><span><b style="color: #C85A80;">ファミリー</b><br>ルーム完備</span></li><li><svg viewBox="0 0 24 24" stroke="#6CC3A0" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.5 8-8 9-4.5-1-8-4.5-8-9V6z"></path><path d="M8.5 12l2.5 2.5 4.5-5"></path></svg><span>徹底した<br><b style="color: #3F9068;">感染予防</b></span></li></ul>
+</div>
+</div>
+</div>
+<!-- 2つの入口 -->
+<div class="wrap" style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; padding-top: 64px">
+<a href="#" style="display: flex; align-items: center; gap: 20px; background: var(--adult); color: var(--on-primary); text-decoration: none; border-radius: 28px; padding: 20px 28px;"><div class="ph phi" style="width: 88px; height: 88px; border-radius: 999px; flex: none; background: var(--adult-soft); background-image: url(../assets/img/71cca148ac14981f2ac4c2717000a3ab.jpg);">写真</div><div style="flex: 1;"><p style="margin: 0; font: 700 12px/20px var(--font-sans); letter-spacing: .2em;">FOR ADULTS</p><p style="margin: 0; font: var(--text-h3);">大人の方はこちら</p><p style="margin: 0; font: var(--text-caption);">歯周病治療・審美治療・矯正・インプラント</p></div><span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 999px; background: var(--surface-raised); color: var(--adult); display: grid; place-items: center; font-weight: 700;"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+<a href="#" style="display: flex; align-items: center; gap: 20px; background: var(--kids-soft); color: var(--ink); text-decoration: none; border-radius: 28px; padding: 20px 28px;"><div class="ph phi" style="width: 88px; height: 88px; border-radius: 999px; flex: none; background: var(--surface-raised); background-image: url(../assets/img/df7b35f68a3a64f3b4e121db03c6ea4b.jpg);">写真</div><div style="flex: 1;"><p style="margin: 0; font: 700 12px/20px var(--font-sans); letter-spacing: .2em; color: var(--kids-ink);">FOR KIDS</p><p style="margin: 0; font: var(--text-h3);">お子さまはこちら</p><p style="margin: 0; font: var(--text-caption); color: var(--ink-muted);">小児歯科・小児矯正・フッ素塗布・ファミリールーム</p></div><span aria-hidden="true" style="width: 44px; height: 44px; border-radius: 999px; background: var(--kids-ink); color: var(--on-primary); display: grid; place-items: center; font-weight: 700;"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+</div>
+</section>
+
+<!-- 3 診療時間・ご予約 ＋ 初めての方へ -->
+<section class="dcs bgph" style="--bgimg: url(../assets/img/71f6d914aeb141ee6fcfe3182d38e28c.jpg); --bgop: .08; --bgpos: center 40%; padding: 32px 0 0; padding-top: 64px">
+<span class="dc" aria-hidden="true" style="left: 40px; top: 48px; width: 92px; background: var(--sky);"></span>
+<span class="dc" aria-hidden="true" style="left: 150px; top: 150px; width: 36px; background: #FFD66B;"></span>
+<span class="dc dc--w" aria-hidden="true" style="right: 48px; top: 72px; color: var(--adult);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+<div style="padding: 0; grid-column: span 2;">
+<table class="hours"><thead><tr><th scope="col">診療時間</th><th scope="col">月</th><th scope="col">火</th><th scope="col" class="today">水（本日）</th><th scope="col">木</th><th scope="col">金</th><th scope="col">土</th><th scope="col">日・祝</th></tr></thead>
+<tbody><tr><td>9:00〜12:30</td><td>●</td><td>●</td><td class="today">●</td><td>●</td><td>●</td><td>▲</td><td>休</td></tr><tr><td>14:00〜18:00</td><td>●</td><td>●</td><td class="today">●</td><td>●</td><td>●</td><td>▲</td><td>休</td></tr></tbody></table>
+<p style="margin: 8px 0 0; font: var(--text-caption); color: var(--ink-muted);">▲ 土曜：9:00〜12:00／13:00〜16:00　休診日：日曜・祝日</p>
+</div>
+<div style="padding: 4px 0 4px 28px; border-left: 2px solid var(--line); display: flex; flex-direction: column; justify-content: center; gap: 10px;">
+<p style="margin: 0; font: var(--text-label);">ご予約・お問い合わせ</p>
+<a href="tel:0962376479" style="font: 700 24px/32px var(--font-display); color: var(--ink); text-decoration: none;"><svg class="cvic" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg>TEL 096-237-6479</a>
+<a class="wg-btn wg-btn--primary" href="#" style="border-radius: 999px;"><svg class="cvic" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg>初診WEB予約（24時間）<span class="btn-arw" aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+<p style="margin: 0; font: var(--text-caption); color: var(--ink-muted);">再診の方はお電話ください。昼休み（12:30〜14:00）はWEB予約が便利です。</p>
+</div>
+</div>
+<div class="wrap" style="margin-top: 32px">
+<div class="card" style="position: relative; padding: 36px 40px; border: 0; background: var(--primary-soft); overflow: hidden; border-radius: 36px;">
+<div aria-hidden="true" style="position: absolute; right: -40px; bottom: -60px; width: 220px; height: 220px; border-radius: 999px; border: 28px solid rgba(59,169,221,.14);"></div>
+<div style="position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 24px;">
+<div style="display: flex; align-items: center; gap: 14px;"><span aria-hidden="true" style="flex: none; width: 60px; height: 60px; border-radius: 20px; background: var(--sky); color: #fff; display: grid; place-items: center; transform: rotate(-6deg);"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-8M12 13c0-4 3-6.5 7-6.5 0 4-3 6.5-7 6.5zM12 13c0-3-2.5-5.5-6-5.5 0 3 2.5 5.5 6 5.5z"></path></svg></span><div><p style="margin: 0; font: 700 13px/20px var(--font-sans); letter-spacing: .16em; color: var(--primary);">FIRST VISIT</p><h2 style="margin: 2px 0 0; font: var(--text-h3);">初めての方へ｜ご来院の流れ</h2></div></div>
+<a class="chip" href="#">初診の流れを詳しく見る</a>
+</div>
+<ol class="cstep" style="position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px;">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4"><li class="step2" style="position: relative; background: #fff; border-radius: 24px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 4px 14px rgba(18,112,159,.08);"><span style="position: relative; flex: none; width: 56px; height: 56px; border-radius: 999px; background: var(--sky); color: #fff; display: grid; place-items: center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{s.icon}}"></path></svg><span style="position: absolute; right: -6px; top: -6px; width: 24px; height: 24px; border-radius: 999px; background: var(--kids-ink); color: #fff; font: 700 12px/24px var(--font-sans); text-align: center;">{{s.no}}</span></span><span style="font: 700 16px/24px var(--font-display);">{{s.title}}</span></li></sc-for>
+</ol>
+<div style="position: relative; margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;"><span style="font: var(--text-label); margin-right: 4px;">お持ちいただくもの</span><span class="bring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v12H3zM3 10h18M6 15h4"></path></svg>保険証（マイナ保険証）</span><span class="bring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5zM12 8v6M9 11h6"></path></svg>医療証</span><span class="bring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18H6zM9 3v18M12 8h3"></path></svg>お薬手帳</span><span class="bring" style="background: var(--kids-soft);"><svg viewBox="0 0 24 24" aria-hidden="true" style="stroke: var(--kids-ink);"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"></path></svg>初診 約[◯]分</span></div>
+</div>
+</div>
+</section>
+
+<!-- 2 ピックアップ -->
+<section class="dcs sec" style="padding-bottom: 80px;">
+<span class="dc" aria-hidden="true" style="right: 36px; bottom: 56px; width: 116px; background: var(--kids);"></span>
+<span class="dc" aria-hidden="true" style="right: 168px; bottom: 40px; width: 22px; background: #EE8FB0;"></span>
+<span class="dc dc--w" aria-hidden="true" style="left: 40px; bottom: 80px; color: var(--adult);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap">
+<div class="head"><span class="tag">PICK UP</span><h2>注目の診療</h2></div>
+<div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin: -24px 0 20px;"><button type="button" class="ctl" aria-label="前のバナー" onClick="{{pkPrev}}"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5L8.5 12l6.5 6.5"></path></svg></button><span style="font: var(--text-label); min-width: 56px; text-align: center;">{{pkNo}} / 4</span><button type="button" class="ctl" aria-label="次のバナー" onClick="{{pkNext}}"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></button></div>
+</div>
+<div class="pkw" style="overflow: hidden; padding: 4px 0 24px max(32px, calc((100% - 1080px) / 2));">
+<div class="pkt" style="display: flex; gap: 20px; transition: transform .5s ease; transform: {{pkStyle}};">
+<sc-for list="{{banners}}" as="p" hint-placeholder-count="6">
+<a href="#" class="bn2 bn2--h" style="background: {{p.tint}};">
+<div class="ph bn2__img phi" style="background-image: url({{p.src}});">{{p.img}}</div>
+<div class="bn2__body"><span class="bn2__tag">自由診療</span><span class="bn2__catch">{{p.catch}}</span><span class="bn2__title">{{p.title}}</span><span class="bn2__more"><span>{{p.foot}}</span><span aria-hidden="true" class="bn2__arw"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></span></div>
+</a>
+</sc-for>
+</div>
+</div>
+<p class="wrap" style="margin: 0 auto; font: var(--text-caption); color: var(--ink-muted); text-align: right;">※自由診療の費用・期間・リスクは各専用ページに記載しています</p>
+</section>
+
+<!-- 6 大人の方へ／お子さまへ（OTONA／KODOMO） -->
+<section class="dcs sec" style="background: var(--surface-raised);">
+<span class="dc" aria-hidden="true" style="left: 56px; bottom: 56px; width: 72px; background: var(--leaf);"></span>
+<span class="dc" aria-hidden="true" style="right: 84px; top: 64px; width: 34px; background: var(--adult);"></span>
+<span class="dc dc--w" aria-hidden="true" style="right: 56px; bottom: 120px; color: var(--kids);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap">
+<div class="head"><span class="tag">FOR YOU</span><h2>大人の方へ・お子さまへ</h2><p>気になることから、ぴったりの診療を選べます。</p></div>
+<div role="tablist" aria-label="対象を選ぶ" style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+<sc-if value="{{isAdult}}" hint-placeholder-val="{{true}}"><button type="button" role="tab" aria-selected="true" class="tab" onClick="{{pickAdult}}" style="border: 2px solid var(--adult); background: var(--adult); color: #fff;">大人の方へ</button><button type="button" role="tab" aria-selected="false" class="tab" onClick="{{pickKids}}" style="border: 2px solid var(--kids-ink); background: #fff; color: var(--kids-ink);">お子さまへ</button></sc-if>
+<sc-if value="{{isKids}}" hint-placeholder-val="{{false}}"><button type="button" role="tab" aria-selected="false" class="tab" onClick="{{pickAdult}}" style="border: 2px solid var(--adult); background: #fff; color: var(--adult);">大人の方へ</button><button type="button" role="tab" aria-selected="true" class="tab" onClick="{{pickKids}}" style="border: 2px solid var(--kids-ink); background: var(--kids-ink); color: #fff;">お子さまへ</button></sc-if>
+</div>
+<div role="tabpanel">
+<sc-if value="{{isAdult}}" hint-placeholder-val="{{true}}">
+<div class="forpanel" style="--lc: var(--adult); background: var(--adult-soft); border-radius: 40px; padding: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; border-top: 8px solid var(--adult);">
+<a href="#" style="position: relative; display: block; text-decoration: none;"><div class="ph phi" style="aspect-ratio: 4 / 3; border-radius: 28px; background: var(--surface-raised); background-image: url(../assets/img/71cca148ac14981f2ac4c2717000a3ab.jpg);">大人向けイメージ（院長・診療風景／既存素材を仮使用）</div><div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 28px; pointer-events: none; background: linear-gradient(180deg, color-mix(in srgb, var(--adult) 20%, transparent) 0%, color-mix(in srgb, var(--adult) 66%, transparent) 100%); mix-blend-mode: multiply;"></div><span aria-hidden="true" class="fyword" style="position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; font: 700 60px/1 var(--font-display); letter-spacing: .2em; padding-left: .2em; color: #fff; text-shadow: 0 2px 24px rgba(0,0,0,.3);">OTONA</span></a>
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<p style="margin: 0; font: 700 15px/24px var(--font-sans); color: var(--adult);">一人ひとりのお悩みに合わせた治療を</p>
+<h3 style="margin: 0; font: var(--text-h2);">大人の方へ</h3>
+<p style="margin: 0; font: var(--text-body-sm); color: var(--ink-muted);">歯周病・審美・矯正・インプラントなど、大人の方のお口のお悩みに対応しています。</p>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;"><a class="lk" href="#">ブルーラジカル歯周病治療</a><a class="lk" href="#">審美治療</a><a class="lk" href="#">矯正治療</a><a class="lk" href="#">インプラント</a></div>
+<div class="chipsP" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;"><span style="font: 700 12px/20px var(--font-sans); color: var(--adult); margin-right: 4px;">お悩みから探す</span><a class="chip" href="#">歯ぐきから血が出る</a><a class="chip" href="#">歯の色が気になる</a><a class="chip" href="#">歯並びが気になる</a><a class="chip" href="#">歯を失ってしまった</a></div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{isKids}}" hint-placeholder-val="{{false}}">
+<div class="forpanel" style="--lc: var(--kids-ink); background: var(--kids-soft); border-radius: 40px; padding: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; border-top: 8px solid var(--kids);">
+<a href="#" style="position: relative; display: block; text-decoration: none;"><div class="ph phi" style="aspect-ratio: 4 / 3; border-radius: 28px; background: var(--surface-raised); background-image: url(../assets/img/df7b35f68a3a64f3b4e121db03c6ea4b.jpg);">お子さま向けイメージ（キッズルーム／既存素材を仮使用）</div><div aria-hidden="true" style="position: absolute; inset: 0; border-radius: 28px; pointer-events: none; background: linear-gradient(180deg, color-mix(in srgb, var(--kids) 20%, transparent) 0%, color-mix(in srgb, var(--kids) 66%, transparent) 100%); mix-blend-mode: multiply;"></div><span aria-hidden="true" class="fyword" style="position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; font: 700 60px/1 var(--font-display); letter-spacing: .2em; padding-left: .2em; color: #fff; text-shadow: 0 2px 24px rgba(0,0,0,.3);">KODOMO</span></a>
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<p style="margin: 0; font: 700 15px/24px var(--font-sans); color: var(--kids-ink);">成長に合わせて、こわくない歯医者さんに</p>
+<h3 style="margin: 0; font: var(--text-h2);">お子さまへ</h3>
+<p style="margin: 0; font: var(--text-body-sm); color: var(--ink-muted);">むし歯予防・フッ素塗布から歯並びのご相談まで、お子さまの成長に合わせてご案内します。キッズスペースに加え、診療チェアの横で過ごせる「ファミリールーム」をご用意しています。</p>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;"><a class="lk" href="#">小児歯科</a><a class="lk" href="#">小児矯正</a><a class="lk" href="#">予防治療・フッ素塗布</a><a class="lk" href="#">キッズスペース</a></div>
+<div class="chipsP" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;"><span style="font: 700 12px/20px var(--font-sans); color: var(--kids-ink); margin-right: 4px;">保護者の方へ</span><a class="chip" href="#">何歳から通える？</a><a class="chip" href="#">付き添いはできる？</a><a class="chip" href="#">歯医者を怖がる</a></div>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</section>
+
+<!-- 7 診療案内（選択で左の写真が切り替わる）＋ 料金の目安 -->
+<section class="dcs sec">
+<span class="dc" aria-hidden="true" style="right: 44px; top: 48px; width: 104px; background: #FFD66B;"></span>
+<span class="dc" aria-hidden="true" style="left: 96px; top: 120px; width: 22px; background: var(--sky);"></span>
+<span class="dc dc--w" aria-hidden="true" style="left: 32px; top: 210px; color: var(--adult);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap">
+<div class="head"><span class="tag">MEDICAL MENU</span><h2>診療案内</h2><p>歯周病治療・審美治療・矯正から小児歯科、むし歯・予防まで、ご相談内容に合わせた診療を行っています。</p></div>
+<div class="msplit" style="display: grid; grid-template-columns: 1fr 1.15fr; gap: 32px; align-items: start; background: var(--sky); border-radius: 40px; padding: 32px;">
+<div class="card" style="border: 0; display: flex; flex-direction: column;">
+<div class="ph phi" style="aspect-ratio: 4 / 3; background: {{msel.bg}}; background-image: url({{msel.src}});">{{msel.name}}（画像）<br>メニューを選ぶと写真が切り替わります</div>
+<div style="padding: 24px; display: flex; flex-direction: column; gap: 8px;">
+<span style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="wg-badge wg-badge--primary">{{msel.who}}</span><sc-if value="{{msel.jihi}}" hint-placeholder-val="{{true}}"><span class="wg-badge wg-badge--default">自由診療を含む</span></sc-if></span>
+<h3 style="margin: 0; font: var(--text-h3);">{{msel.name}}</h3>
+<p style="margin: 0; font: var(--text-body-sm); color: var(--ink-muted);">{{msel.text}}</p>
+<a class="wg-btn wg-btn--secondary" href="#" style="border-radius: 999px; align-self: flex-start; margin-top: 6px;">{{msel.short}}を詳しく見る<span class="btn-arw" aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+</div>
+</div>
+<ul class="mlist" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;">
+<sc-for list="{{mitems}}" as="m" hint-placeholder-count="10">
+<li>
+<sc-if value="{{m.on}}" hint-placeholder-val="{{false}}"><button type="button" class="mi mi--on" aria-pressed="true" onClick="{{m.pick}}"><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: var(--surface-raised); color: var(--primary); display: grid; place-items: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="{{m.icon}}"></path></svg></span><span style="display: flex; flex-direction: column;"><span style="font: var(--text-caption);">{{m.catch}}</span><span style="font: 700 15px/22px var(--font-display);">{{m.short}}</span></span></button></sc-if>
+<sc-if value="{{m.off}}" hint-placeholder-val="{{true}}"><button type="button" class="mi" aria-pressed="false" onClick="{{m.pick}}"><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="{{m.icon}}"></path></svg></span><span style="display: flex; flex-direction: column;"><span style="font: var(--text-caption); color: var(--ink-muted);">{{m.catch}}</span><span style="font: 700 15px/22px var(--font-display);">{{m.short}}</span></span></button></sc-if>
+</li>
+</sc-for>
+</ul>
+</div>
+<div class="pricebar" style="margin-top: 40px; padding: 24px 0 0; border-top: 2px solid var(--adult); display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: start;">
+<div><h3 style="margin: 0 0 6px; font: var(--text-h4);">自由診療の料金の目安</h3><a class="more" href="#">料金表を見る<svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></a></div>
+<dl style="margin: 0; display: grid; grid-template-columns: 1fr auto; font: var(--text-body-sm);"><sc-for list="{{prices}}" as="r" hint-placeholder-count="5"><dt style="padding: 6px 0; border-bottom: 1px dashed var(--line-strong);">{{r}}</dt><dd style="margin: 0; padding: 6px 0; border-bottom: 1px dashed var(--line-strong); font-weight: 700; text-align: right;">[¥◯◯,◯◯◯〜]</dd></sc-for></dl>
+</div>
+</div>
+</section>
+
+<!-- CV帯（追加：中間のお問い合わせ導線） -->
+<section style="padding: 0 0 96px;">
+<div class="wrap">
+<div style="position: relative; overflow: hidden; background: var(--sky); border-radius: 40px; padding: 36px 40px 40px; display: flex; flex-direction: column; gap: 24px;">
+<div aria-hidden="true" style="position: absolute; right: -60px; top: -80px; width: 220px; height: 220px; border-radius: 999px; background: rgba(255,255,255,.18);"></div>
+<div aria-hidden="true" style="position: absolute; left: 38%; bottom: -100px; width: 180px; height: 180px; border-radius: 999px; background: rgba(255,255,255,.14);"></div>
+<div style="position: relative; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;"><div><p style="margin: 0; font: 700 24px/34px var(--font-display); color: var(--surface-raised, #ffffff)">まずはお気軽にご相談ください</p><p style="margin: 2px 0 0; font: var(--text-body-sm); color: var(--surface-raised, #ffffff)">初診の方はWEB予約（24時間受付）が便利です。再診の方はお電話ください。</p></div></div>
+<div class="cvt3" style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+<a href="#" class="cvt" style="--bg: var(--primary); --fg: #fff; --ic: #fff; --icfg: var(--primary);"><span class="cvt__ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg></span><span class="cvt__tx"><span class="cvt__s">24時間受付</span><span class="cvt__m">初診WEB予約</span></span><span aria-hidden="true" class="cvt__arw"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+<a href="tel:0962376479" class="cvt" style="--bg: #fff; --fg: var(--ink); --ic: var(--sky); --icfg: #fff;"><span class="cvt__ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg></span><span class="cvt__tx"><span class="cvt__s" style="color: var(--primary);">お電話でのご予約</span><span class="cvt__m">096-237-6479</span></span><span aria-hidden="true" class="cvt__arw" style="background: var(--primary-soft); color: var(--primary);"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+<a href="#" class="cvt" style="--bg: #E3F2E8; --fg: var(--ink); --ic: #3F9068; --icfg: #fff;"><span class="cvt__ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4c5 0 9 3.1 9 7s-4 7-9 7c-.9 0-1.8-.1-2.6-.3L5 20l1.2-3.6C4.2 15.1 3 13.2 3 11c0-3.9 4-7 9-7z"></path><path d="M8 11h.01M12 11h.01M16 11h.01"></path></svg></span><span class="cvt__tx"><span class="cvt__s" style="color: #2F6E50;">お知らせを受け取る</span><span class="cvt__m">LINE友だち追加</span></span><span aria-hidden="true" class="cvt__arw" style="background: #fff; color: #3F9068;"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 8 特徴（数字を大きくカラフルに） -->
+<section class="dcs" style="background: var(--surface-raised); padding: 96px 0;">
+<span class="dc" aria-hidden="true" style="left: 40px; top: 48px; width: 92px; background: var(--sky);"></span>
+<span class="dc" aria-hidden="true" style="left: 150px; top: 150px; width: 36px; background: #FFD66B;"></span>
+<span class="dc dc--w" aria-hidden="true" style="right: 48px; top: 72px; color: var(--adult);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap">
+<div style="text-align: center; margin-bottom: 56px;">
+<p style="margin: 0; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;"><span style="font: 700 28px/42px var(--font-display); letter-spacing: .08em; text-align: right;">私たちが<br>大切にしている</span><span class="rainbow" style="font: 700 168px/1 var(--font-display);">4</span><span style="font: 700 40px/1 var(--font-display); letter-spacing: .08em;">つのこと</span></p>
+<h2 style="margin: 12px 0 0; font: var(--text-h4); color: var(--ink-muted);">すけひろ歯科・kidsデンタルクリニックの特徴</h2>
+<p style="margin: 8px auto 0; font: var(--text-body); color: var(--ink-muted); max-width: 44em;">熊本市東区長嶺南で、お子さまから大人の方まで通える歯科医院として、予防から歯周病治療・審美治療まで幅広く対応しています。</p>
+</div>
+<div class="g2" style="gap: 24px;">
+<sc-for list="{{features}}" as="f" hint-placeholder-count="4">
+<article class="ft" style="padding: 16px 0 32px 12px; border-bottom: 1px dashed var(--line-strong); display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 28px; align-items: center; position: relative; overflow: visible;">
+<div style="position: relative;"><div class="ph phi" style="width: 168px; height: 168px; border-radius: 999px; box-shadow: 0 0 0 6px {{f.color}}; background-image: url({{f.src}});">{{f.img}}</div><span aria-hidden="true" style="position: absolute; left: -6px; top: -10px; width: 64px; height: 64px; border-radius: 999px; background: {{f.color}}; color: #fff; display: grid; place-items: center; font: 700 26px/1 var(--font-display);">{{f.no}}</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px;"><span aria-hidden="true" style="font: 700 14px/20px var(--font-sans); letter-spacing: .2em; color: var(--ink-muted);">POINT <span style="font: 700 56px/1 var(--font-display); color: {{f.color}}; letter-spacing: 0;">{{f.no}}</span></span><h3 style="margin: 0; font: var(--text-h4);">{{f.title}}</h3><p style="margin: 0; font: var(--text-body-sm); color: var(--ink-muted);">{{f.text}}</p><span class="more">詳しく見る<svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></div>
+</article>
+</sc-for>
+</div>
+<div style="text-align: center; margin-top: 48px;"><a class="wg-btn wg-btn--secondary" href="#" style="border-radius: 999px;">当院の特徴をもっと見る<span class="btn-arw" aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a></div>
+</div>
+</section>
+
+<!-- 9 ドクター紹介 -->
+
+
+<!-- 10 FAQ -->
+<section class="dcs dcs sec">
+<span class="dc" aria-hidden="true" style="left: 56px; bottom: 56px; width: 72px; background: var(--leaf);"></span>
+<span class="dc" aria-hidden="true" style="right: 84px; top: 64px; width: 34px; background: var(--adult);"></span>
+<span class="dc dc--w" aria-hidden="true" style="right: 56px; bottom: 120px; color: var(--kids);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<span class="dc" aria-hidden="true" style="right: 36px; bottom: 56px; width: 116px; background: var(--kids);"></span>
+<span class="dc" aria-hidden="true" style="right: 168px; bottom: 40px; width: 22px; background: #EE8FB0;"></span>
+<span class="dc dc--w" aria-hidden="true" style="left: 40px; bottom: 80px; color: var(--adult);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; align-items: center;">
+<div style="position: relative; justify-self: center; width: min(400px, 100%);"><div class="ph phi" style="width: 100%; aspect-ratio: 1 / 1; border-radius: 999px; background-image: url(../assets/img/67604347a748306c14cd26c5c8e754ae.jpg); --bp: 9% 0%; --bs: 180%;">院長写真（助廣 都祈 院長／既存素材を仮使用・撮影後差し替え）</div><span style="position: absolute; right: 0; bottom: 24px; background: var(--surface-raised); box-shadow: var(--shadow-1); border-radius: 999px; padding: 10px 22px; font: var(--text-label);">院長　助廣 都祈（すけひろ とき）</span></div>
+<div style="display: flex; flex-direction: column; gap: 18px;">
+<p style="margin: 0; font: 700 13px/20px var(--font-sans); letter-spacing: .16em; color: var(--primary);">MESSAGE／DOCTOR</p>
+<div style="padding: 0 0 0 24px; border-left: 4px solid var(--sky);"><h2 style="margin: 0 0 12px; font: var(--text-h3);">患者さまの食べる喜びと<br>自信が持てる笑顔を支えます</h2><p style="margin: 0; font: var(--text-body); color: var(--ink-muted);">幼い頃の歯科通院の経験と、「美味しく食べる」という生きるうえで大切な喜びを支えたいという思いから歯科医師を志しました。治療を通じてできることが増え、笑顔で帰っていくお子さまの成長を見ることが、何よりのやりがいです。</p></div>
+<p style="margin: 0; font: var(--text-caption); color: var(--ink-muted);">[経歴・保有資格・所属学会]</p>
+<a class="wg-btn wg-btn--secondary" href="#" style="border-radius: 999px; align-self: flex-start;">ドクター紹介はこちら<span class="btn-arw" aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+</div>
+</div>
+</section><section class="bgph sec" style="--bgimg: url(../assets/img/93b0d11e1ee59b02343695cb5c2a069b.jpg); --bgop: .06; --bgpos: center; padding-top: 0;">
+<div class="wrap" style="max-width: 1144px;">
+<div class="head"><span class="tag">FAQ</span><h2>よくあるご質問</h2><p>初めての方からよくいただくご質問をまとめました。</p></div>
+<div class="wg-acc" style="max-width: none; padding: 0; border-top: 2px solid var(--primary);">
+<sc-for list="{{faq}}" as="q" hint-placeholder-count="7">
+<details open="{{q.open}}"><summary><span style="display: flex; gap: 12px; align-items: center;"><span aria-hidden="true" style="flex: none; width: 32px; height: 32px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; font: 700 14px/1 var(--font-sans);">Q</span>{{q.q}}</span></summary><p style="padding-left: 44px;">{{q.a}}</p></details>
+</sc-for>
+</div>
+<div style="text-align: center; margin-top: 32px;"><a class="wg-btn wg-btn--secondary" href="#" style="border-radius: 999px;">よくあるご質問をもっと見る<span class="btn-arw" aria-hidden="true"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a></div>
+</div>
+</section>
+
+<!-- 4 お知らせ ＋ 5 Instagram -->
+<section class="dcs" style="padding: 0 0 96px;">
+<span class="dc" aria-hidden="true" style="right: 44px; top: 48px; width: 104px; background: #FFD66B;"></span>
+<span class="dc" aria-hidden="true" style="left: 96px; top: 120px; width: 22px; background: var(--sky);"></span>
+<span class="dc dc--w" aria-hidden="true" style="left: 32px; top: 210px; color: var(--adult);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+<div style="padding: 0;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;"><h2 style="margin: 0; font: var(--text-h4);">お知らせ</h2><a class="more" href="#">お知らせ一覧を見る<svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></a></div>
+<ul style="list-style: none; margin: 0; padding: 0;">
+<sc-for list="{{news}}" as="n" hint-placeholder-count="3">
+<li style="border-bottom: 1px solid var(--line);"><a href="#" style="display: flex; gap: 12px; align-items: center; padding: 14px 0; text-decoration: none; color: var(--ink); flex-wrap: wrap;"><time style="font: var(--text-caption); color: var(--ink-muted);">20XX.XX.XX</time><span class="wg-badge wg-badge--primary">お知らせ</span><span style="font: var(--text-body-sm);">{{n}}</span></a></li>
+</sc-for>
+</ul>
+</div>
+<div style="padding: 0;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;"><h2 style="margin: 0; font: var(--text-h4);">Instagram</h2><a class="more" href="#">Instagramを見る<svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></a></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;"><sc-for list="{{insta}}" as="i" hint-placeholder-count="6"><div class="ph phi" style="aspect-ratio: 1 / 1; border-radius: 12px; background-image: url(../assets/img/e5eb881849671388708c038d2066f20a.jpg);">投稿画像</div></sc-for></div>
+</div>
+</div>
+</section>
+
+<!-- 11 院内・設備 -->
+<section class="dcs sec" style="background: var(--surface-raised);">
+<span class="dc" aria-hidden="true" style="left: 40px; top: 48px; width: 92px; background: var(--sky);"></span>
+<span class="dc" aria-hidden="true" style="left: 150px; top: 150px; width: 36px; background: #FFD66B;"></span>
+<span class="dc dc--w" aria-hidden="true" style="right: 48px; top: 72px; color: var(--adult);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap">
+<div class="head"><span class="tag">CLINIC</span><h2>院内・設備のご紹介</h2></div>
+<div class="g3">
+<sc-for list="{{facility}}" as="c" hint-placeholder-count="3">
+<a href="#" class="card card--flat" style="text-decoration: none; color: var(--ink); display: flex; flex-direction: column;"><div class="ph phi" style="aspect-ratio: 3 / 2; border-radius: 20px; background-image: url({{c.src}});">{{c.img}}</div><div style="padding: 20px; display: flex; flex-direction: column; gap: 8px;"><span style="font: var(--text-h4);">{{c.title}}</span><span style="font: var(--text-body-sm); color: var(--ink-muted);">{{c.text}}</span><span class="more">詳しく見る<svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></div></a>
+</sc-for>
+</div>
+<div style="margin-top: 24px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center;"><span style="font: var(--text-label);">バリアフリー情報</span><span class="wg-badge wg-badge--default">ベビーカー入室[要確認]</span><span class="wg-badge wg-badge--default">車椅子[要確認]</span><span class="wg-badge wg-badge--default">おむつ替えスペース[要確認]</span></div>
+</div>
+</section>
+
+<!-- 12 ブログ -->
+<section class="sec" style="background: var(--surface-raised); padding-top: 0;">
+<div class="wrap">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;"><h2 style="margin: 0; font: var(--text-h3);">ブログ</h2><a class="more" href="#">ブログ一覧を見る<svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></a></div>
+<div class="g3">
+<sc-for list="{{blog}}" as="b" hint-placeholder-count="3">
+<a href="#" style="text-decoration: none; color: var(--ink); display: flex; gap: 16px; align-items: center;"><div class="ph phi" style="width: 120px; height: 120px; border-radius: 20px; flex: none; background-image: url(../assets/img/3bebb773b0ed7fb6c61c1c6dc98ff7e3.jpg);">画像</div><div style="display: flex; flex-direction: column; gap: 4px;"><span style="display: flex; gap: 8px; align-items: center;"><time style="font: var(--text-caption); color: var(--ink-muted);">20XX.XX.XX</time><span class="wg-badge wg-badge--default">小児歯科</span></span><span style="font: var(--text-h4); font-size: 16px; line-height: 26px;">ブログ記事タイトル（ダミー）{{b}}</span></div></a>
+</sc-for>
+</div>
+</div>
+</section>
+
+<!-- 13 診療時間・アクセス -->
+<section class="dcs bgph sec" style="--bgimg: url(../assets/img/c5e7bda2e84b21d78e3412048e86642f.jpg); --bgop: .07; --bgpos: center 30%; background: var(--surface-sunken);">
+<span class="dc" aria-hidden="true" style="right: 36px; bottom: 56px; width: 116px; background: var(--kids);"></span>
+<span class="dc" aria-hidden="true" style="right: 168px; bottom: 40px; width: 22px; background: #EE8FB0;"></span>
+<span class="dc dc--w" aria-hidden="true" style="left: 40px; bottom: 80px; color: var(--adult);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap">
+<div class="head"><span class="tag">ACCESS</span><h2>診療時間・アクセス</h2></div>
+<div class="card" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); border: 0;">
+<div style="padding: 32px; display: flex; flex-direction: column; gap: 20px;">
+<table class="hours"><thead><tr><th scope="col">診療時間</th><th scope="col">月</th><th scope="col">火</th><th scope="col">水</th><th scope="col">木</th><th scope="col">金</th><th scope="col">土</th><th scope="col">日・祝</th></tr></thead>
+<tbody><tr><td style="background: var(--surface-sunken);">9:00〜12:30</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">▲</td><td style="background: var(--surface-sunken);">休</td></tr><tr><td style="background: var(--surface-sunken);">14:00〜18:00</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">●</td><td style="background: var(--surface-sunken);">▲</td><td style="background: var(--surface-sunken);">休</td></tr></tbody></table>
+<p style="margin: -8px 0 0; font: var(--text-caption); color: var(--ink-muted);">▲ 土曜：9:00〜12:00／13:00〜16:00　休診日：日曜・祝日</p>
+<dl style="margin: 0; display: grid; grid-template-columns: 80px 1fr; row-gap: 12px; font: var(--text-body-sm);">
+<dt style="font-weight: 700;">住所</dt><dd style="margin: 0;">〒861-8039 熊本県熊本市東区長嶺南1丁目6-5</dd>
+<dt style="font-weight: 700;">電話</dt><dd style="margin: 0;"><a href="tel:0962376479">096-237-6479</a></dd>
+<dt style="font-weight: 700;">アクセス</dt><dd style="margin: 0;">JR豊肥本線 新水前寺駅（「水前寺駅通り」停留所）よりバス「福祉センターグラウンド前」下車 徒歩4分／232号線（小池竜田線）沿い「熊本長嶺郵便局」ななめ向かい</dd>
+<dt style="font-weight: 700;">駐車場</dt><dd style="margin: 0;">共有駐車場あり（50台）</dd>
+</dl>
+</div>
+<div class="ph" style="min-height: 420px;">Googleマップ埋め込み（医院の所在地）</div>
+</div>
+</div>
+</section>
+
+<!-- 14 スタッフ募集 -->
+<section class="dcs sec" style="overflow: hidden;">
+<span class="dc" aria-hidden="true" style="left: 56px; bottom: 56px; width: 72px; background: var(--leaf);"></span>
+<span class="dc" aria-hidden="true" style="right: 84px; top: 64px; width: 34px; background: var(--adult);"></span>
+<span class="dc dc--w" aria-hidden="true" style="right: 56px; bottom: 120px; color: var(--kids);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap">
+<div class="rcC">
+<div class="rcC__txt">
+<p class="rcC__en" aria-hidden="true">Recruitment</p>
+<h2 class="rcC__ttl">スタッフ募集</h2>
+<p class="rcC__lead" style="font-family: &quot;Zen Kaku Gothic New&quot;, &quot;Noto Sans JP&quot;, &quot;Hiragino Sans&quot;, &quot;Yu Gothic&quot;, system-ui, sans-serif">こどもも おとなも、安心して通える医院に。<br>スタッフみんなで<b style="color: var(--kids-ink);">楽しく</b>、<b style="color: var(--sky);">笑顔</b>をつくっています。</p>
+<ul class="rcC__tags"><li>歯科衛生士</li><li>歯科助手</li></ul>
+<div class="rcC__cta"><a class="wg-btn wg-btn--primary" href="#" style="border-radius: 999px; padding-left: 32px; padding-right: 32px;">求人情報を見る ↗</a><span style="font: var(--text-caption); color: var(--ink-muted);">求人サイト（別ドメイン）へ移動します</span></div>
+</div>
+<div class="rcC__vis" aria-hidden="true">
+<span class="rcC__blob"></span>
+<span class="rcC__dot" style="left: 2%; top: 46%; width: 18px; height: 18px; background: var(--sky);"></span>
+<span class="rcC__dot" style="right: 4%; top: 4%; width: 28px; height: 28px; background: #FFD66B;"></span>
+<span class="rcC__dot" style="right: 10%; bottom: 2%; width: 14px; height: 14px; background: var(--kids);"></span>
+<span class="rcC__dot" style="left: 44%; top: 0; width: 12px; height: 12px; background: #9ACB7E;"></span>
+<div class="rcC__p shp3" style="left: 2%; top: 4%; width: 46%;"><div class="ph phi" style="background: #D6EEFA; background-image: url(../assets/img/9e433a66f202c69fdc92d4f7f62d73ea.jpg); --bp: 50% 30%;">スタッフ写真</div></div>
+<div class="rcC__p shp1" style="left: 52%; top: 10%; width: 40%;"><div class="ph phi" style="background: #FFE1D2; background-image: url(../assets/img/71f6d914aeb141ee6fcfe3182d38e28c.jpg); --bp: 60% 40%;">スタッフ写真</div></div>
+<div class="rcC__p shp4" style="left: 8%; top: 52%; width: 38%; transform: rotate(-6deg);"><div class="ph phi" style="background: #FFF1B8; background-image: url(../assets/img/b779424621a3ba1d9111378d68900849.jpg); --bp: 55% 30%;">スタッフ写真</div></div>
+<div class="rcC__p shp2" style="left: 52%; top: 54%; width: 38%;"><div class="ph phi" style="background: #D9F0E2; background-image: url(../assets/img/3a4525be4c26d4953a8d522b7f514847.jpg); --bp: 55% 20%;">スタッフ写真</div></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 15 CTA -->
+<section class="dcs" style="padding: 0 0 96px;">
+<span class="dc" aria-hidden="true" style="right: 44px; top: 48px; width: 104px; background: #FFD66B;"></span>
+<span class="dc" aria-hidden="true" style="left: 96px; top: 120px; width: 22px; background: var(--sky);"></span>
+<span class="dc dc--w" aria-hidden="true" style="left: 32px; top: 210px; color: var(--adult);"><svg aria-hidden="true" viewBox="0 0 120 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12c8-10 12-10 20 0s12 10 20 0 12-10 20 0 12 10 20 0 12-10 20 0 12 10 16 4"></path></svg></span>
+<div class="wrap">
+<div style="position: relative; overflow: hidden; background: var(--primary-soft); border-radius: 48px; padding: 56px 48px 48px; display: flex; flex-direction: column; gap: 22px; align-items: center; text-align: center;">
+<div aria-hidden="true" style="position: absolute; left: -70px; top: -70px; width: 220px; height: 220px; border-radius: 999px; border: 32px solid rgba(59,169,221,.18);"></div>
+<div aria-hidden="true" style="position: absolute; right: -40px; bottom: -60px; width: 200px; height: 200px; border-radius: 999px; background-color: var(--info, #1f5fae); opacity: 0.2"></div>
+
+<div style="position: relative;"><p style="margin: 0; font: 700 13px/20px var(--font-sans); letter-spacing: .2em; color: var(--primary);">CONTACT</p><h2 style="margin: 6px 0 0; font: var(--text-h2);">ご予約・ご相談はお気軽にどうぞ</h2></div>
+<div style="position: relative; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;"><span class="bring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"></path></svg>平日 9:00〜12:30／14:00〜18:00</span><span class="bring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"></path></svg>土曜 9:00〜12:00／13:00〜16:00</span><span class="bring" style="border-color: transparent; background-color: var(--surface-raised, #ffffff)">休診日：日曜・祝日</span></div>
+<div class="cvt3" style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; width: 100%; text-align: left;">
+<a href="#" class="cvt cvt--lg" style="--bg: var(--primary); --fg: #fff; --ic: #fff; --icfg: var(--primary);"><span class="cvt__ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4M9 15l2 2 4-4"></path></svg></span><span class="cvt__tx"><span class="cvt__s">初めての方・24時間受付</span><span class="cvt__m">初診WEB予約</span></span><span aria-hidden="true" class="cvt__arw"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+<a href="tel:0962376479" class="cvt cvt--lg" style="--bg: #fff; --fg: var(--ink); --ic: var(--sky); --icfg: #fff;"><span class="cvt__ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg></span><span class="cvt__tx"><span class="cvt__s" style="color: var(--primary);">再診の方・お電話で</span><span class="cvt__m">096-237-6479</span></span><span aria-hidden="true" class="cvt__arw" style="background: var(--primary-soft); color: var(--primary);"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+<a href="#" class="cvt cvt--lg" style="--bg: #E3F2E8; --fg: var(--ink); --ic: #3F9068; --icfg: #fff;"><span class="cvt__ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4c5 0 9 3.1 9 7s-4 7-9 7c-.9 0-1.8-.1-2.6-.3L5 20l1.2-3.6C4.2 15.1 3 13.2 3 11c0-3.9 4-7 9-7z"></path><path d="M8 11h.01M12 11h.01M16 11h.01"></path></svg></span><span class="cvt__tx"><span class="cvt__s" style="color: #2F6E50;">お知らせ・ご相談</span><span class="cvt__m">LINE友だち追加</span></span><span aria-hidden="true" class="cvt__arw" style="background: #fff; color: #3F9068;"><svg class="chv" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"></path></svg></span></a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 16 フッター -->
+<footer class="wg-footer" style="padding: 56px 0 24px;">
+<div class="wrap" style="display: grid; gap: 40px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+<div style="display: flex; flex-direction: column; gap: 6px; font: var(--text-body-sm);"><img src="../assets/img/396729c000a254cdd40a6c4b5a5b48ff.png" alt="すけひろ歯科・kidsデンタルクリニック" style="width: 96px; height: auto; margin-bottom: 8px;"><span style="font: var(--text-caption); color: var(--ink-muted);">医療法人MSA（正式表記は要確認）</span><span style="font: 700 16px/24px var(--font-display);">すけひろ歯科・kidsデンタルクリニック</span><span>〒861-8039<br>熊本県熊本市東区長嶺南1丁目6-5</span><span>TEL 096-237-6479</span><div class="ph" style="margin-top: 12px; width: 200px; height: 56px; background: var(--surface-raised); border-radius: 8px;">Medical DOC バナー</div></div>
+<div><h3>診療案内</h3><ul><sc-for list="{{fmenu}}" as="x" hint-placeholder-count="13"><li><a href="#">{{x}}</a></li></sc-for></ul></div>
+<div><h3>メニュー</h3><ul><sc-for list="{{fnav}}" as="x" hint-placeholder-count="9"><li><a href="#">{{x}}</a></li></sc-for></ul></div>
+<div><h3>その他</h3><ul><li><a href="#">患者様へのご案内（施設基準）</a></li><li><a href="#">サイトマップ</a></li></ul></div>
+</div>
+<div class="wrap" style="width: 100%;"><small style="display: block;">© SUKEHIRO DENTAL CLINIC</small></div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"palette":{"editor":"enum","options":["1 スカイ×ネイビー×コーラル","2 スカイ×ディープネイビー×マスタード","3 スカイ×インディゴ×オレンジ"],"default":"3 スカイ×インディゴ×オレンジ","section":"配色案"},"autoplay":{"editor":"boolean","default":true,"section":"メインビジュアル"},"$preview":{"width":1440,"height":10400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { slide: 0, paused: false, menu: 0 };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      if (this.props.autoplay === false || this.state.paused) return;
+      this.setState({ slide: (this.state.slide + 1) % 3 });
+    }, 6000);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+  renderVals() {
+    const p = String(this.props.palette ?? '3').charAt(0);
+    const adult = 'var(--adult)', kids = 'var(--kids)';
+    const st = this.state || { slide: 0, paused: false, menu: 0 };
+    const slide = st.slide % 3;
+    const names = ['お子さま', '診療風景', '大人の方'];
+    const menu = [
+      { short: '歯周病治療', catch: '切開を伴わない選択肢も', who: '大人', jihi: true, bg: 'var(--adult-soft)', name: '歯周病治療（ブルーラジカル）', src: '../assets/img/39f14f536ea0c732c40b8805c3d110c2.jpg', text: '症状に応じて、ブルーラジカル（自由診療）と保険の歯周病治療を使い分けます。' },
+      { short: '審美治療', catch: '歯の色や形をきれいに', who: '大人', jihi: true, bg: 'var(--adult-soft)', name: '審美治療（ジルコニア・ラミネートベニア）', src: '../assets/img/e9c1bfe64b31bcc72905f8d84b8decf7.jpg', text: 'ジルコニア・ラミネートベニアによる歯の色・形の治療です。' },
+      { short: '矯正歯科', catch: '小児矯正・成人矯正', who: '大人・お子さま', jihi: true, bg: 'var(--surface-sunken)', name: '矯正歯科（小児矯正・成人矯正）', src: '../assets/img/9bd4642596ca8428689bb51f234529bd.jpg', text: '小児矯正・成人矯正（マウスピース型矯正〈インビザライン〉・ワイヤー矯正）。' },
+      { short: '予防治療', catch: '健康な歯を守る', who: '大人・お子さま', jihi: true, bg: 'var(--surface-sunken)', name: '予防治療・クリーニング', src: '../assets/img/3bebb773b0ed7fb6c61c1c6dc98ff7e3.jpg', text: '定期的なチェックとお口のケアで、むし歯・歯周病を防ぎます。' },
+      { short: 'ホワイトニング', catch: '歯の色が気になる方へ', who: '大人', jihi: true, bg: 'var(--adult-soft)', name: 'ホワイトニング', src: '../assets/img/44d225145cafd496c41d7089a35fec8a.jpg', text: '歯の色が気になる方へのホワイトニングをご案内します。' },
+      { short: 'むし歯治療', catch: 'できる限り歯を残す', who: '大人・お子さま', jihi: false, bg: 'var(--surface-sunken)', name: 'むし歯治療', src: '../assets/img/b6f926ee1d0565a858bce9dc39d8b988.jpg', text: '症状・進行度に応じたむし歯の治療を行います。' },
+      { short: '小児歯科', catch: 'お子さまに寄り添った治療', who: 'お子さま', jihi: false, bg: 'var(--kids-soft)', name: '小児歯科', src: '../assets/img/2770851ba28956755b96133911760b0e.jpg', text: '年代・お悩みに合わせたお子さまの歯科診療・フッ素塗布。' },
+      { short: 'インプラント', catch: '失った歯の機能を取り戻す', who: '大人', jihi: true, bg: 'var(--adult-soft)', name: 'インプラント', src: '../assets/img/db8ffb9ae3fc306d00c3828f5da28c92.jpg', text: '歯を失った部分の治療の選択肢の一つです。' },
+      { short: '義歯（入れ歯）', catch: '違和感の少ない噛み心地', who: '大人', jihi: true, bg: 'var(--adult-soft)', name: '義歯（入れ歯）', src: '../assets/img/4e5dc9a8dbf2d9a7d2b188e123ee64c0.jpg', text: '入れ歯のご相談・作製・調整を行います。' },
+      { short: '歯科口腔外科', catch: '親知らず・お口のトラブル', who: '大人・お子さま', jihi: false, bg: 'var(--surface-sunken)', name: '歯科口腔外科', src: '../assets/img/d3910455a59e573f036873eb38481296.jpg', text: '親知らずの抜歯など口腔外科のご相談に対応します。' }
+    ];
+    const ICONS = [
+      'M4 9c2.5-1.5 5.5 1 8 0s5.5-1.5 8 0M8 9v6c0 3 1 6 2 6s1.2-3.5 2-3.5 1 3.5 2 3.5 2-3 2-6V9M9 4.5l1 1.5M12 3.5v2M15 4.5l-1 1.5',
+      'M8 6c-2 0-3 1.4-3 3.2 0 1.4.6 2.6 1.1 3.8.5 1.2.6 2.4.9 3.9.2 1.1.6 2.6 1.4 2.6 1 0 1-1.8 1.4-3.2.3-.9.6-1.2 1.7-1.2s1.4.3 1.7 1.2c.4 1.4.4 3.2 1.4 3.2.8 0 1.2-1.5 1.4-2.6.3-1.5.4-2.7.9-3.9.4-.9.8-1.8 1-2.8M8 6c1.5 0 2.2.7 3.5.7M18 2.5v5M15.5 5h5',
+      'M3 8h18v8H3zM3 12h18M7.5 8v8M12 8v8M16.5 8v8M6.5 11h2v2h-2zM11 11h2v2h-2zM15.5 11h2v2h-2z',
+      'M3 21l8.5-8.5M11.5 12.5l2-2 5 5-2 2zM13.5 10.5l1.5-1.5M15.5 12.5l1.5-1.5M17.5 14.5l1.5-1.5M14 4.5l1-1M17 3l.5 1.5M19.5 6l1.5-.5',
+      'M12 3l1.8 4.6 4.7 1.9-4.7 1.9L12 16l-1.8-4.6-4.7-1.9 4.7-1.9zM18.5 15l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9zM5 16.5l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z',
+      'M7 3c-2.5 0-4 2-4 4.5 0 2 .8 3.5 1.5 5 .7 1.6.8 3.2 1.2 5.2.3 1.6.8 3.3 2 3.3 1.4 0 1.4-2.4 2-4.3.4-1.2.8-1.7 2.3-1.7s1.9.5 2.3 1.7c.6 1.9.6 4.3 2 4.3 1.2 0 1.7-1.7 2-3.3.4-2 .5-3.6 1.2-5.2.7-1.5 1.5-3 1.5-5C21 5 19.5 3 17 3c-2 0-3 1-5 1S9 3 7 3zM14 6.5a1.5 1.5 0 1 0 .01 0',
+      'M12 21a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15zM9.5 12.5h.01M14.5 12.5h.01M9.5 16c1.4 1 3.6 1 5 0M12 6c0-1.6 1.2-3 3-3',
+      'M7 3h10l-1.2 5H8.2zM9 8h6M9.5 11h5M10 14h4M10.5 17h3M12 17v4',
+      'M4 10c0-3.3 3.6-5.5 8-5.5s8 2.2 8 5.5v2.5c0 4-3.6 6.5-8 6.5s-8-2.5-8-6.5zM4 12.5h16M8 12.5v3M12 12.5v3.5M16 12.5v3',
+      'M4 20l9.5-9.5M13.5 10.5L18 6l1.5 1.5-4.5 4.5M6 3v5M3.5 5.5h5'
+    ];
+    const sel = st.menu % menu.length;
+    return {
+      navOpen: !!(this.state && this.state.navOpen),
+      navExp: (this.state && this.state.navOpen) ? 'true' : 'false',
+      toggleNav: () => this.setState({ navOpen: !(this.state && this.state.navOpen) }),
+      closeNav: () => this.setState({ navOpen: false }),
+      pal: 'pal-' + (p === '1' || p === '2' ? p : '3'),
+      s1: slide === 0, s2: slide === 1, s3: slide === 2,
+      slideNo: slide + 1, slideName: names[slide],
+      dots: [0, 1, 2].map((i) => ({ label: 'スライド' + (i + 1) + '：' + names[i], on: i === slide, off: i !== slide, cur: i === slide ? 'true' : 'false', go: () => this.setState({ slide: i }) })),
+      prev: () => this.setState({ slide: (slide + 2) % 3 }),
+      next: () => this.setState({ slide: (slide + 1) % 3 }),
+      togglePause: () => this.setState({ paused: !st.paused }),
+      pauseLabel: st.paused ? '自動再生を再開' : '自動再生を一時停止',
+      pauseIcon: st.paused ? '▶' : '❙❙',
+      mitems: menu.map((m, i) => ({ ...m, icon: ICONS[i], on: i === sel, off: i !== sel, pick: () => this.setState({ menu: i }) })),
+      msel: menu[sel],
+      pkStyle: 'translateX(-' + (Math.min(st.pk || 0, 3) * 520) + 'px)',
+      pkNo: Math.min(st.pk || 0, 3) + 1,
+      pkPrev: () => this.setState({ pk: Math.max(0, (this.state.pk || 0) - 1) }),
+      pkNext: () => this.setState({ pk: Math.min(3, (this.state.pk || 0) + 1) }),
+      isAdult: st.who !== 'kids', isKids: st.who === 'kids',
+      pickAdult: () => this.setState({ who: 'adult' }),
+      pickKids: () => this.setState({ who: 'kids' }),
+      banners: [
+        { img: 'ブルーラジカル歯周病治療（画像）', src: '../assets/img/39f14f536ea0c732c40b8805c3d110c2.jpg', catch: '切開を伴わない、歯周病治療の選択肢', title: 'ブルーラジカル\n歯周病治療', foot: '流れ・費用・リスクは専用ページで', tint: 'linear-gradient(180deg,#DFF1FB 0%,#F2E8F2 100%)' },
+        { img: '審美治療（画像）', src: '../assets/img/e9c1bfe64b31bcc72905f8d84b8decf7.jpg', catch: '歯の色・形のお悩みに', title: '審美治療', foot: 'ジルコニア・ラミネートベニア', tint: 'linear-gradient(180deg,#F6EEE6 0%,#ECE4F1 100%)' },
+        { img: '矯正治療（成人矯正）（画像）', src: '../assets/img/8e0566cf5d07def3a30ddac847c19179.jpg', catch: '目立ちにくいマウスピース型矯正も', title: '成人矯正', foot: 'インビザライン・ワイヤー矯正', tint: 'linear-gradient(180deg,#E6F2EA 0%,#E0EEF5 100%)' },
+        { img: '小児矯正（画像）', src: '../assets/img/dbccb221da2100a9d1d909cd172c2ca5.jpg', catch: 'あごの成長発育に合わせて', title: '小児矯正', foot: 'お子さまの歯並びの治療', tint: 'linear-gradient(180deg,#FFF0E2 0%,#FDE6EE 100%)' },
+        { img: 'インプラント（画像）', src: '../assets/img/db8ffb9ae3fc306d00c3828f5da28c92.jpg', catch: '歯を失った部分の治療の選択肢', title: 'インプラント', foot: '流れ・費用・リスクは専用ページで', tint: 'linear-gradient(180deg,#E6EEF8 0%,#ECE6F3 100%)' },
+        { img: 'ホワイトニング（画像）', src: '../assets/img/44d225145cafd496c41d7089a35fec8a.jpg', catch: '歯の色が気になる方へ', title: 'ホワイトニング', foot: '［今後追加予定のバナー枠］', tint: 'linear-gradient(180deg,#F0F8FC 0%,#FDEDF3 100%)' }
+      ],
+      steps: [ { no: '1', title: 'WEB予約', icon: 'M3 5h18v16H3zM3 10h18M8 3v4M16 3v4M9 15l2 2 4-4' }, { no: '2', title: '問診', icon: 'M9 3h6v3H9zM7 4.5H5V21h14V4.5h-2M8.5 11h7M8.5 14.5h7M8.5 18h4' }, { no: '3', title: '検査・説明', icon: 'M10.5 17a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13zM15.5 15.5L20 20M8 10.5h5M10.5 8v5' }, { no: '4', title: '治療開始', icon: 'M7 4c-2.2 0-3.5 1.7-3.5 3.9 0 1.7.7 3 1.3 4.4.6 1.4.7 2.8 1 4.5.3 1.4.7 2.9 1.8 2.9 1.2 0 1.2-2.1 1.7-3.7.4-1 .7-1.5 2-1.5s1.6.5 2 1.5c.5 1.6.5 3.7 1.7 3.7 1 0 1.5-1.5 1.8-2.9.3-1.7.4-3.1 1-4.5.4-.9.8-1.8 1.1-2.7M7 4c1.8 0 2.6.9 4.4.9M19 2v4M17 4h4' } ],
+      pickups: [
+        { bar: adult, img: 'ブルーラジカル歯周病治療（画像）', src: '../assets/img/39f14f536ea0c732c40b8805c3d110c2.jpg', title: 'ブルーラジカル歯周病治療', text: '切開を伴わない歯周病治療の選択肢として導入しています。治療の流れ・費用の目安・主なリスク、治療後のメンテナンスの大切さを専用ページでご案内します。' },
+        { bar: adult, img: '審美治療（画像）', src: '../assets/img/e9c1bfe64b31bcc72905f8d84b8decf7.jpg', title: '審美治療（ジルコニア・ラミネートベニア）', text: '歯の色・形のお悩みに、ジルコニアやラミネートベニアを用いた治療をご案内します。' },
+        { bar: adult, img: '矯正治療（成人矯正）（画像）', src: '../assets/img/8e0566cf5d07def3a30ddac847c19179.jpg', title: '矯正治療（成人矯正）', text: 'マウスピース型矯正（インビザライン）やワイヤー矯正による、大人の方の歯並びの治療をご案内します。' },
+        { bar: kids, img: '小児矯正（画像）', src: '../assets/img/dbccb221da2100a9d1d909cd172c2ca5.jpg', title: '小児矯正', text: 'あごの成長発育に合わせて行う、お子さまの歯並びの治療をご案内します。' }
+      ],
+      news: ['○月：診療のご案内（ダミー）', '診療時間変更のお知らせ（ダミー）', '休診日のご案内（ダミー）'],
+      insta: [1, 2, 3, 4, 5, 6],
+      prices: ['ブルーラジカル歯周病治療', '審美治療', '矯正治療', 'インプラント', 'ホワイトニング'],
+      features: [
+        { no: '01', color: 'var(--kids)', img: 'お子さまの「こわい」に配慮した環境（画像）', src: '../assets/img/2770851ba28956755b96133911760b0e.jpg', title: 'お子さまの「こわい」に配慮した環境', text: 'キッズスペースに加え、チェアの横で過ごせるフローリングの「ファミリールーム」を整備。診療中にモニターで動画を見られるなど、少しずつ治療に慣れられるよう配慮しています。' },
+        { no: '02', color: 'var(--sky)', img: '個室・半個室（画像）', src: '../assets/img/93b0d11e1ee59b02343695cb5c2a069b.jpg', title: 'プライバシーに配慮した個室・半個室', text: '個室2室と、パーテーションで仕切った半個室2室をご用意。お子さまの診療や特別な処置の際は個室を使用しています。' },
+        { no: '03', color: 'var(--leaf)', img: '痛みに配慮した歯科治療（画像）', src: '../assets/img/b6f926ee1d0565a858bce9dc39d8b988.jpg', title: '痛みに配慮した歯科治療', text: '表面麻酔の使用など、治療時の痛みに配慮した診療を心がけています。' },
+        { no: '04', color: 'var(--adult)', img: '地域の暮らしを支える歯科医院（画像）', src: '../assets/img/c5e7bda2e84b21d78e3412048e86642f.jpg', title: '地域の暮らしを支える歯科医院', text: 'ファミリー層の多い熊本市東区で、「美味しく食べる」毎日の喜びと、家族みんなの笑顔を支える歯科医院を目指しています。' }
+      ],
+      faq: [
+        { open: true, q: '初めてですが、予約は必要ですか？', a: 'ご予約をお願いしています。WEB予約（24時間受付）またはお電話（096-237-6479）からご予約ください。' },
+        { open: false, q: '駐車場はありますか？', a: '共有駐車場（50台）と共有駐輪場をご利用いただけます。232号線（小池竜田線）沿い、熊本長嶺郵便局のななめ向かいです。' },
+        { open: false, q: '子どもは何歳から診てもらえますか？', a: '乳歯が生え始めた頃からご相談いただけます。キッズルームを完備しています。（要確認）' },
+        { open: false, q: 'ブルーラジカル歯周病治療とはどのような治療ですか？', a: '切開を伴わずに行う歯周病治療の選択肢の一つで、保険適用外（自由診療）です。治療回数・費用の目安・主なリスクや副作用、治療後のメンテナンスについては専用ページでご案内しています。' },
+        { open: false, q: '土曜日も診療していますか？', a: '土曜は 9:00〜12:00／13:00〜16:00 で診療しています。休診日は日曜・祝日です。' },
+        { open: false, q: '矯正治療の費用や期間の目安を教えてください。', a: '小児矯正・成人矯正ともに自由診療です。費用・期間の目安は矯正歯科ページと料金表でご案内しています。' },
+        { open: false, q: '料金はどこで確認できますか？', a: '料金表ページに、保険診療・自由診療の費用の目安を掲載しています。' }
+      ],
+      facility: [
+        { img: '院内紹介（既存の院内写真を仮使用）', src: '../assets/img/93b0d11e1ee59b02343695cb5c2a069b.jpg', title: '院内紹介', text: '受付・待合室・キッズスペース・ファミリールーム、個室・半個室の診療室など、院内の様子をご紹介します。' },
+        { img: '設備紹介（既存の院内写真を仮使用）', src: '../assets/img/d3910455a59e573f036873eb38481296.jpg', title: '設備紹介', text: '口腔外バキューム、空気清浄機（エアドッグ）、診療中に動画を見られるモニターなど、当院の設備をご紹介します。' },
+        { img: '感染予防対策（既存の院内写真を仮使用）', src: '../assets/img/d35601eee9ebf893d1c065a661db99f5.jpg', title: '当院の感染予防対策', text: '各チェアへの口腔外バキューム・エアドッグの設置、器具の滅菌、ディスポーザブル製品の使用など、感染予防の取り組みをご紹介します。' }
+      ],
+      blog: [1, 2, 3],
+      fmenu: ['ブルーラジカル歯周病治療', '歯周病治療', '審美治療（ジルコニア・ラミネートベニア）', '矯正歯科（成人矯正）', 'インプラント', 'むし歯治療', '予防治療・クリーニング', '小児歯科', '小児矯正', '義歯（入れ歯）', 'ホワイトニング', '歯科口腔外科', 'すきっ歯の治療'],
+      fnav: ['ホーム', '当院の特徴', '歯科医師紹介', '料金表', 'よくあるご質問', 'お知らせ', 'ブログ', '求人案内', '診療時間・アクセス']
+    };
+  }
+}
+</script>
+</body>
+</html>
